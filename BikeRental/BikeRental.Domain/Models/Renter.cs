@@ -18,5 +18,5 @@ public class Renter
     /// <summary>
     /// Renter's phone number
     /// </summary>
-    public required string Number { get; set; }
+    public required string PhoneNumber { get; set; }
 }

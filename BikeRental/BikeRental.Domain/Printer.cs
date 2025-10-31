@@ -1,11 +1,11 @@
-﻿namespace BikeRental.Domain;
-using Models;
-using Enum;
+﻿using BikeRental.Domain.Models;
+using BikeRental.Domain.Enum;
 
+namespace BikeRental.Domain;
 /// <summary>
 /// A class just for print initialized data
 /// </summary>
-public class Program
+public class Printer
 {
     public static void Main(string[] args)
     {
@@ -35,7 +35,7 @@ public class Program
         {
             Id = Guid.NewGuid(),
             FullName = "Иван Иванов",
-            Number = "+7 (999) 123-45-67"
+            PhoneNumber = "+7 (999) 123-45-67"
         };
 
         Lease lease1 = new Lease
@@ -63,7 +63,7 @@ public class Program
         Console.WriteLine($"  Rent Price (per hour): {myBike.Model.RentPrice}");
         
         Console.WriteLine($"Full Name: {renter1.FullName}");
-        Console.WriteLine($"Phone Number: {renter1.Number}");
+        Console.WriteLine($"Phone Number: {renter1.PhoneNumber}");
 
         Console.WriteLine("\nLease Agreement Information");
         Console.WriteLine($"Lease ID: {lease1.Id}");

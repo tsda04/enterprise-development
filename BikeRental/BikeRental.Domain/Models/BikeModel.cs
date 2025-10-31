@@ -1,7 +1,6 @@
+using BikeRental.Domain.Enum;
+
 namespace BikeRental.Domain.Models;
-
-using Enum;
-
 /// <summary>
 /// A class describing the models of bikes that can be rented
 /// </summary>
