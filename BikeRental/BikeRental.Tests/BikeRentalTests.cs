@@ -3,12 +3,13 @@ using BikeRental.Domain.Enum;
 namespace BikeRental.Tests;
 
 /// <summary>
+/// Class for unit-tests
 /// </summary>
 public class BikeRentalTests(RentalFixture fixture) : IClassFixture<RentalFixture>
 {
-
-    ///Вывести информацию обо всех спортивных велосипедах.
+    
     /// <summary>
+    /// Displays information about all sports bikes
     /// </summary>
     [Fact]
     public void InfoAboutSportBikes()
@@ -23,8 +24,8 @@ public class BikeRentalTests(RentalFixture fixture) : IClassFixture<RentalFixtur
         Assert.Equal(expected, actual);
     }
     
-    ///Вывести топ 5 моделей велосипедов (по прибыли от аренды и по длительности аренды отдельно).
     /// <summary>
+    /// Displays the top 5 bike models ranked by rental revenue
     /// </summary>
     [Fact]
     public void TopFiveModelsIncome()
@@ -45,6 +46,9 @@ public class BikeRentalTests(RentalFixture fixture) : IClassFixture<RentalFixtur
         Assert.Equal(expected, actual);
     }
     
+    /// <summary>
+    /// Displays the top 5 bike models ranked by rental duration
+    /// </summary
     [Fact]
     public void TopFiveModelsDuration()
     {
@@ -64,10 +68,9 @@ public class BikeRentalTests(RentalFixture fixture) : IClassFixture<RentalFixtur
 
         Assert.Equal(expected, actual);
     }
-    
-    
-    //Вывести информацию о минимальном, максимальном и среднем времени аренды велосипедов.
+
     /// <summary>
+    /// Displays information about the minimum, maximum, and average rental time
     /// </summary>
     [Fact]
     public void MinMaxAvgRental()
@@ -84,8 +87,8 @@ public class BikeRentalTests(RentalFixture fixture) : IClassFixture<RentalFixtur
     }
     
     
-    ///Вывести суммарное время аренды велосипедов каждого типа.
     /// <summary>
+    ///  Displays the total rental time for each bike type
     /// </summary>
     [Theory]
     [InlineData(BikeType.Road, 11)]
@@ -102,8 +105,8 @@ public class BikeRentalTests(RentalFixture fixture) : IClassFixture<RentalFixtur
         Assert.Equal(expected, actual);
     }
     
-    /// Вывести информацию о клиентах, бравших велосипеды на прокат больше всего раз.
     /// <summary>
+    ///   Displays information about customers who have rented bikes the most times
     /// </summary>
     [Fact]
     public void TopThreeRenters()
