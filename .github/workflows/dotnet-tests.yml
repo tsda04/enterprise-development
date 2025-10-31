@@ -17,6 +17,7 @@ jobs:
 
       - name: Run tests directly
         run: |
+          cd BikeRental
           cd BikeRental.Tests
           dotnet restore
           dotnet build
