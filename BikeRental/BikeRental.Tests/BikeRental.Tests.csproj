@@ -11,4 +11,13 @@
         <ProjectReference Include="..\BikeRental.Domain\BikeRental.Domain.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+        <Using Include="Xunit" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="xunit.assert" Version="2.4.2" />
+      <PackageReference Include="xunit.extensibility.core" Version="2.4.2" />
+    </ItemGroup>
+
 </Project>

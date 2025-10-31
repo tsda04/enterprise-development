@@ -18,7 +18,7 @@ public class Lease
     /// <summary>
     /// Lease ID
     /// </summary>
-    public required Guid Id { get; set; } = Guid.NewGuid();
+    public required int Id { get; set; }
 
     /// <summary>
     /// Rental start time

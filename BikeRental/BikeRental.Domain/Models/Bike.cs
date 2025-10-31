@@ -8,7 +8,7 @@ public class Bike
     /// <summary>
     /// Bike's unique id
     /// </summary>
-    public required Guid Id { get; set; } = Guid.NewGuid();
+    public required int Id { get; set; }
 
     /// <summary>
     /// Bike's serial number

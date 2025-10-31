@@ -9,7 +9,7 @@ public class BikeModel
     /// <summary>
     /// The unique id for bike model
     /// </summary>
-    public required Guid Id { get; set; } = Guid.NewGuid();
+    public required int Id { get; set; }
 
     /// <summary>
     /// The type of bicycle: road, sport, mountain, hybrid
