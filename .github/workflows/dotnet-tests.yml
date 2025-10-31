@@ -14,10 +14,14 @@ jobs:
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: 8.0.x
+      
+      - name: Restore dependencies
+        run: dotnet restore BikeRental/BikeRental.sln
 
-      - name: Run tests directly
-        run: |
-          cd BikeRental/BikeRental.Tests
-          dotnet restore
-          dotnet build
-          dotnet test --verbosity normal
+      - name: Build
+        run: dotnet build --no-restore --configuration Release BikeRental/BikeRental.sln
+
+      - name: Run tests
+        run: dotnet test BikeRental/BikeRental.Tests/BikeRental.Tests.csproj --no-build --configuration Release
+              
+      
