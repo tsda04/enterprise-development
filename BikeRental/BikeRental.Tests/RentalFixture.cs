@@ -23,10 +23,10 @@ public class RentalFixture
     /// <summary>
     /// A list of all leases
     /// </summary>
-    public readonly List<Lease> Lease;
+    public List<Lease> Lease { get; }
     
     /// <summary>
-    /// TODO
+    /// A class for creating the data for testing
     /// </summary>
     public RentalFixture()
     {
@@ -36,9 +36,6 @@ public class RentalFixture
         Lease = GetLeases(Bikes, Renters);
     }
     
-    /// <summary>
-    /// TODO
-    /// </summary>
     private List<BikeModel> GetBikeModels() =>
     [
         new() { Id = 1, Type = BikeType.Mountain, WheelSize = 26, MaxСyclistWeight = 95, Weight = 8.2, BrakeType = "Carbon", YearOfManufacture = "2024", RentPrice = 18 },
