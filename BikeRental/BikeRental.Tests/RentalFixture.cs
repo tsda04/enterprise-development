@@ -36,7 +36,7 @@ public class RentalFixture
         Lease = GetLeases(Bikes, Renters);
     }
     
-    private List<BikeModel> GetBikeModels() =>
+    private static List<BikeModel> GetBikeModels() =>
     [
         new() { Id = 1, Type = BikeType.Mountain, WheelSize = 26, MaxСyclistWeight = 95, Weight = 8.2, BrakeType = "Carbon", YearOfManufacture = "2024", RentPrice = 18 },
         new() { Id = 2, Type = BikeType.Road, WheelSize = 27, MaxСyclistWeight = 115, Weight = 12.8, BrakeType = "Hydraulic", YearOfManufacture = "2023", RentPrice = 25 },
@@ -50,7 +50,7 @@ public class RentalFixture
         new() { Id = 10, Type = BikeType.Road, WheelSize = 28, MaxСyclistWeight = 80, Weight = 9.3, BrakeType = "Mechanical", YearOfManufacture = "2022", RentPrice = 19 },
     ];
 
-    private List<Renter> GetRenters() =>
+    private static List<Renter> GetRenters() =>
     [
         new() { Id = 1, FullName = "Алексеев Алексей", PhoneNumber = "+7 912 345 67 89" },
         new() { Id = 2, FullName = "Васильев Василий", PhoneNumber = "+7 923 456 78 90" },
@@ -64,7 +64,7 @@ public class RentalFixture
         new() { Id = 10, FullName = "Андреева Наталья", PhoneNumber = "+7 901 234 56 78" },
     ];
 
-    private List<Bike> GetBikes(List<BikeModel> models) => 
+    private static List<Bike> GetBikes(List<BikeModel> models) => 
     [
         new() { Id = 1, SerialNumber = "R001", Color = "Silver", Model = models[0] },
         new() { Id = 2, SerialNumber = "R002", Color = "Navy", Model = models[1] },
@@ -78,7 +78,7 @@ public class RentalFixture
         new() { Id = 10, SerialNumber = "R010", Color = "Lavender", Model = models[9] },
     ];
 
-    private List<Lease> GetLeases(List<Bike> bikes, List<Renter> renters) => 
+    private static List<Lease> GetLeases(List<Bike> bikes, List<Renter> renters) => 
     [
         new() { Id = 1, Bike = bikes[0], Renter = renters[0], RentalStartTime = DateTime.Now.AddHours(-12), RentalDuration = 3 },
         new() { Id = 2, Bike = bikes[1], Renter = renters[1], RentalStartTime = DateTime.Now.AddHours(-8), RentalDuration = 6 },
