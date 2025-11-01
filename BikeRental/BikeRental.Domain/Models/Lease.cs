@@ -6,6 +6,11 @@ namespace BikeRental.Domain.Models;
 public class Lease
 {
     /// <summary>
+    /// Lease ID
+    /// </summary>
+    public required int Id { get; set; }
+    
+    /// <summary>
     /// Person who rents a bike
     /// </summary>
     public required Renter Renter { get; set; }
@@ -14,11 +19,6 @@ public class Lease
     /// Bike for rent
     /// </summary>
     public required Bike Bike { get; set; }
-    
-    /// <summary>
-    /// Lease ID
-    /// </summary>
-    public required int Id { get; set; }
 
     /// <summary>
     /// Rental start time
