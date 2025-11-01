@@ -44,6 +44,6 @@ public class BikeModel
     /// <summary>
     /// Cost per hour rental
     /// </summary>
-    public required int RentPrice { get; set; }
+    public required decimal RentPrice { get; set; }
 
 }
