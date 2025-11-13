@@ -82,13 +82,13 @@ public class RentalFixture
     [
         new() { Id = 1, Bike = bikes[0], Renter = renters[0], RentalStartTime = DateTime.Now.AddHours(-12), RentalDuration = 3 },
         new() { Id = 2, Bike = bikes[1], Renter = renters[1], RentalStartTime = DateTime.Now.AddHours(-8), RentalDuration = 6 },
-        new() { Id = 3, Bike = bikes[2], Renter = renters[2], RentalStartTime = DateTime.Now.AddHours(-15), RentalDuration = 4 },
-        new() { Id = 4, Bike = bikes[3], Renter = renters[3], RentalStartTime = DateTime.Now.AddHours(-5), RentalDuration = 2 },
+        new() { Id = 3, Bike = bikes[2], Renter = renters[5], RentalStartTime = DateTime.Now.AddHours(-15), RentalDuration = 4 },
+        new() { Id = 4, Bike = bikes[3], Renter = renters[5], RentalStartTime = DateTime.Now.AddHours(-5), RentalDuration = 2 },
         new() { Id = 5, Bike = bikes[4], Renter = renters[4], RentalStartTime = DateTime.Now.AddHours(-20), RentalDuration = 8 },
         new() { Id = 6, Bike = bikes[5], Renter = renters[5], RentalStartTime = DateTime.Now.AddHours(-3), RentalDuration = 1 },
         new() { Id = 7, Bike = bikes[6], Renter = renters[6], RentalStartTime = DateTime.Now.AddHours(-18), RentalDuration = 5 },
-        new() { Id = 8, Bike = bikes[7], Renter = renters[7], RentalStartTime = DateTime.Now.AddHours(-7), RentalDuration = 7 },
+        new() { Id = 8, Bike = bikes[7], Renter = renters[6], RentalStartTime = DateTime.Now.AddHours(-7), RentalDuration = 7 },
         new() { Id = 9, Bike = bikes[8], Renter = renters[8], RentalStartTime = DateTime.Now.AddHours(-10), RentalDuration = 4 },
-        new() { Id = 10, Bike = bikes[9], Renter = renters[9], RentalStartTime = DateTime.Now.AddHours(-2), RentalDuration = 3 },
+        new() { Id = 10, Bike = bikes[9], Renter = renters[9], RentalStartTime = DateTime.Now.AddHours(-2), RentalDuration = 4 },
     ];
 }

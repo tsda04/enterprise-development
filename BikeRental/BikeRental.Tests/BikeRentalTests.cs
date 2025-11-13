@@ -30,7 +30,7 @@ public class BikeRentalTests(RentalFixture fixture) : IClassFixture<RentalFixtur
     [Fact]
     public void TopFiveModelsIncome()
     {
-        var expected = new List<int> {5, 8, 6, 2, 9};
+        var expected = new List<int> {5, 8, 2, 9, 3}; /// 9,7,3 have same result (= 60)
 
         var actual = fixture.Lease
             .GroupBy(lease => lease.Bike.Model.Id)
@@ -52,7 +52,7 @@ public class BikeRentalTests(RentalFixture fixture) : IClassFixture<RentalFixtur
     [Fact]
     public void TopFiveModelsDuration()
     {
-        var expected = new List<int> {5, 8, 6, 2, 9}; 
+        var expected = new List<int> {5, 8, 2, 7, 3}; 
 
         var actual = fixture.Lease
             .GroupBy(lease => lease.Bike.Model.Id)
@@ -77,7 +77,7 @@ public class BikeRentalTests(RentalFixture fixture) : IClassFixture<RentalFixtur
     {
         var expectedMinimum = 1;
         var expectedMaximum = 8;
-        var expectedAverage = 4.3;
+        var expectedAverage = 4.4;
         
         var durations = fixture.Lease.Select(rent => rent.RentalDuration).ToList();
       
@@ -91,7 +91,7 @@ public class BikeRentalTests(RentalFixture fixture) : IClassFixture<RentalFixtur
     ///  Displays the total rental time for each bike type
     /// </summary>
     [Theory]
-    [InlineData(BikeType.Road, 11)]
+    [InlineData(BikeType.Road, 12)]
     [InlineData(BikeType.Sport, 9)]
     [InlineData(BikeType.Mountain, 8)]
     [InlineData(BikeType.Hybrid, 15)]
@@ -111,7 +111,7 @@ public class BikeRentalTests(RentalFixture fixture) : IClassFixture<RentalFixtur
     [Fact]
     public void TopThreeRenters()
     {
-        var expected = new List<int> {1, 2, 6};
+        var expected = new List<int> {6, 7, 1};
 
         var actual = fixture.Lease
             .GroupBy(lease => lease.Renter.Id)
