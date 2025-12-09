@@ -1,15 +1,7 @@
-namespace BikeRental.Domain.Models;
+namespace BikeRental.Application.Contracts.Dtos;
 
-/// <summary>
-/// A class describing a renter
-/// </summary>
-public class Renter
+public class RenterCreateUpdateDto
 {
-    /// <summary>
-    /// Renter's id
-    /// </summary>
-    public required int Id { get; set; }
-
     /// <summary>
     /// Renter's full name
     /// </summary>

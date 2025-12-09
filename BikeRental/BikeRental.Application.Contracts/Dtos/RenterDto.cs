@@ -1,9 +1,9 @@
-namespace BikeRental.Domain.Models;
+namespace BikeRental.Application.Contracts.Dtos;
 
 /// <summary>
 /// A class describing a renter
 /// </summary>
-public class Renter
+public class RenterDto
 {
     /// <summary>
     /// Renter's id

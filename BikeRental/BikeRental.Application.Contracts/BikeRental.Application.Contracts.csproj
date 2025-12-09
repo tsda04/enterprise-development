@@ -8,7 +8,6 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <Folder Include="Dtos\" />
+        <ProjectReference Include="..\BikeRental.Domain\BikeRental.Domain.csproj" />
     </ItemGroup>
-
 </Project>
