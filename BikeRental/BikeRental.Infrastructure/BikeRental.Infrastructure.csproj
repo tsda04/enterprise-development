@@ -7,7 +7,8 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <Folder Include="InMemory\" />
+      <Folder Include="InMemory\Data\" />
+      <Folder Include="InMemory\Repositories\" />
     </ItemGroup>
 
 </Project>
