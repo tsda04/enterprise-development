@@ -8,7 +8,7 @@ public class Renter
     /// <summary>
     /// Renter's id
     /// </summary>
-    public required int Id { get; set; }
+    public int Id { get; set; }
 
     /// <summary>
     /// Renter's full name

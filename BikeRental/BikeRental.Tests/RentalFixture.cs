@@ -38,16 +38,16 @@ public class RentalFixture
     
     private static List<BikeModel> GetBikeModels() =>
     [
-        new() { Id = 1, Type = BikeType.Mountain, WheelSize = 26, MaxСyclistWeight = 95, Weight = 8.2, BrakeType = "Carbon", YearOfManufacture = "2024", RentPrice = 18 },
-        new() { Id = 2, Type = BikeType.Road, WheelSize = 27, MaxСyclistWeight = 115, Weight = 12.8, BrakeType = "Hydraulic", YearOfManufacture = "2023", RentPrice = 25 },
-        new() { Id = 3, Type = BikeType.Sport, WheelSize = 28, MaxСyclistWeight = 85, Weight = 7.9, BrakeType = "V-Brake", YearOfManufacture = "2024", RentPrice = 22 },
-        new() { Id = 4, Type = BikeType.Road, WheelSize = 29, MaxСyclistWeight = 105, Weight = 14.7, BrakeType = "Mechanical", YearOfManufacture = "2023", RentPrice = 20 },
-        new() { Id = 5, Type = BikeType.Hybrid, WheelSize = 26, MaxСyclistWeight = 90, Weight = 6.8, BrakeType = "Hydraulic", YearOfManufacture = "2024", RentPrice = 35 },
-        new() { Id = 6, Type = BikeType.Sport, WheelSize = 28, MaxСyclistWeight = 125, Weight = 13.5, BrakeType = "Disc", YearOfManufacture = "2023", RentPrice = 28 },
-        new() { Id = 7, Type = BikeType.Mountain, WheelSize = 27, MaxСyclistWeight = 110, Weight = 12.2, BrakeType = "V-Brake", YearOfManufacture = "2022", RentPrice = 16 },
-        new() { Id = 8, Type = BikeType.Hybrid, WheelSize = 29, MaxСyclistWeight = 100, Weight = 7.5, BrakeType = "Carbon", YearOfManufacture = "2023", RentPrice = 32 },
-        new() { Id = 9, Type = BikeType.Sport, WheelSize = 26, MaxСyclistWeight = 130, Weight = 15.8, BrakeType = "Hydraulic", YearOfManufacture = "2024", RentPrice = 24 },
-        new() { Id = 10, Type = BikeType.Road, WheelSize = 28, MaxСyclistWeight = 80, Weight = 9.3, BrakeType = "Mechanical", YearOfManufacture = "2022", RentPrice = 19 },
+        new() { Id = 1, Type = BikeType.Mountain, WheelSize = 26, MaxCyclistWeight = 95, Weight = 8.2, BrakeType = "Carbon", YearOfManufacture = "2024", RentPrice = 18 },
+        new() { Id = 2, Type = BikeType.Road, WheelSize = 27, MaxCyclistWeight = 115, Weight = 12.8, BrakeType = "Hydraulic", YearOfManufacture = "2023", RentPrice = 25 },
+        new() { Id = 3, Type = BikeType.Sport, WheelSize = 28, MaxCyclistWeight = 85, Weight = 7.9, BrakeType = "V-Brake", YearOfManufacture = "2024", RentPrice = 22 },
+        new() { Id = 4, Type = BikeType.Road, WheelSize = 29, MaxCyclistWeight = 105, Weight = 14.7, BrakeType = "Mechanical", YearOfManufacture = "2023", RentPrice = 20 },
+        new() { Id = 5, Type = BikeType.Hybrid, WheelSize = 26, MaxCyclistWeight = 90, Weight = 6.8, BrakeType = "Hydraulic", YearOfManufacture = "2024", RentPrice = 35 },
+        new() { Id = 6, Type = BikeType.Sport, WheelSize = 28, MaxCyclistWeight = 125, Weight = 13.5, BrakeType = "Disc", YearOfManufacture = "2023", RentPrice = 28 },
+        new() { Id = 7, Type = BikeType.Mountain, WheelSize = 27, MaxCyclistWeight = 110, Weight = 12.2, BrakeType = "V-Brake", YearOfManufacture = "2022", RentPrice = 16 },
+        new() { Id = 8, Type = BikeType.Hybrid, WheelSize = 29, MaxCyclistWeight = 100, Weight = 7.5, BrakeType = "Carbon", YearOfManufacture = "2023", RentPrice = 32 },
+        new() { Id = 9, Type = BikeType.Sport, WheelSize = 26, MaxCyclistWeight = 130, Weight = 15.8, BrakeType = "Hydraulic", YearOfManufacture = "2024", RentPrice = 24 },
+        new() { Id = 10, Type = BikeType.Road, WheelSize = 28, MaxCyclistWeight = 80, Weight = 9.3, BrakeType = "Mechanical", YearOfManufacture = "2022", RentPrice = 19 },
     ];
 
     private static List<Renter> GetRenters() =>
@@ -66,16 +66,86 @@ public class RentalFixture
 
     private static List<Bike> GetBikes(List<BikeModel> models) => 
     [
-        new() { Id = 1, SerialNumber = "R001", Color = "Silver", Model = models[0] },
-        new() { Id = 2, SerialNumber = "R002", Color = "Navy", Model = models[1] },
-        new() { Id = 3, SerialNumber = "R003", Color = "Charcoal", Model = models[2] },
-        new() { Id = 4, SerialNumber = "R004", Color = "Beige", Model = models[3] },
-        new() { Id = 5, SerialNumber = "R005", Color = "Burgundy", Model = models[4] },
-        new() { Id = 6, SerialNumber = "R006", Color = "Teal", Model = models[5] },
-        new() { Id = 7, SerialNumber = "R007", Color = "Coral", Model = models[6] },
-        new() { Id = 8, SerialNumber = "R008", Color = "Indigo", Model = models[7] },
-        new() { Id = 9, SerialNumber = "R009", Color = "Bronze", Model = models[8] },
-        new() { Id = 10, SerialNumber = "R010", Color = "Lavender", Model = models[9] },
+        new()
+        {
+            Id = 1,
+            SerialNumber = "R001",
+            Color = "Silver",
+            Model = models[0],
+            ModelId = 0
+        },
+        new()
+        {
+            Id = 2,
+            SerialNumber = "R002",
+            Color = "Navy",
+            Model = models[1],
+            ModelId = 0
+        },
+        new()
+        {
+            Id = 3,
+            SerialNumber = "R003",
+            Color = "Charcoal",
+            Model = models[2],
+            ModelId = 0
+        },
+        new()
+        {
+            Id = 4,
+            SerialNumber = "R004",
+            Color = "Beige",
+            Model = models[3],
+            ModelId = 0
+        },
+        new()
+        {
+            Id = 5,
+            SerialNumber = "R005",
+            Color = "Burgundy",
+            Model = models[4],
+            ModelId = 0
+        },
+        new()
+        {
+            Id = 6,
+            SerialNumber = "R006",
+            Color = "Teal",
+            Model = models[5],
+            ModelId = 0
+        },
+        new()
+        {
+            Id = 7,
+            SerialNumber = "R007",
+            Color = "Coral",
+            Model = models[6],
+            ModelId = 0
+        },
+        new()
+        {
+            Id = 8,
+            SerialNumber = "R008",
+            Color = "Indigo",
+            Model = models[7],
+            ModelId = 0
+        },
+        new()
+        {
+            Id = 9,
+            SerialNumber = "R009",
+            Color = "Bronze",
+            Model = models[8],
+            ModelId = 0
+        },
+        new()
+        {
+            Id = 10,
+            SerialNumber = "R010",
+            Color = "Lavender",
+            Model = models[9],
+            ModelId = 0
+        },
     ];
 
     private static List<Lease> GetLeases(List<Bike> bikes, List<Renter> renters) => 

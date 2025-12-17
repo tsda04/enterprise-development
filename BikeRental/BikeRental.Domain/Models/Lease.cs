@@ -8,7 +8,7 @@ public class Lease
     /// <summary>
     /// Lease ID
     /// </summary>
-    public required int Id { get; set; }
+    public int Id { get; set; }
     
     /// <summary>
     /// Person who rents a bike

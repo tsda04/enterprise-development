@@ -17,7 +17,7 @@ public class BikeModelCreateUpdateDto
     /// <summary>
     /// Maximum permissible cyclist weight
     /// </summary>
-    public required int MaxСyclistWeight { get; set; }
+    public required int MaxCyclistWeight { get; set; }
 
     /// <summary>
     /// Weight of the bike model

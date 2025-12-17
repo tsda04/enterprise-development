@@ -1,3 +1,5 @@
+using System.ComponentModel.DataAnnotations.Schema;
+
 namespace BikeRental.Domain.Models;
 
 /// <summary>
@@ -8,7 +10,10 @@ public class Bike
     /// <summary>
     /// Bike's unique id
     /// </summary>
-    public required int Id { get; set; }
+    public int Id { get; set; }
+    
+    [ForeignKey(nameof(Model))]
+    public required int ModelId { get; set; }
 
     /// <summary>
     /// Bike's serial number
@@ -23,5 +28,5 @@ public class Bike
     /// <summary>
     /// Bike's model
     /// </summary>
-    public required BikeModel Model { get; set; }
+    public virtual BikeModel Model { get; init; } = null!;
 }

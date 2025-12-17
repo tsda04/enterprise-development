@@ -9,7 +9,7 @@ public class BikeModel
     /// <summary>
     /// The unique id for bike model
     /// </summary>
-    public required int Id { get; set; }
+    public int Id { get; set; }
 
     /// <summary>
     /// The type of bicycle: road, sport, mountain, hybrid
@@ -24,7 +24,7 @@ public class BikeModel
     /// <summary>
     /// Maximum permissible cyclist weight
     /// </summary>
-    public required int MaxСyclistWeight { get; set; }
+    public required int MaxCyclistWeight { get; set; }
 
     /// <summary>
     /// Weight of the bike model
