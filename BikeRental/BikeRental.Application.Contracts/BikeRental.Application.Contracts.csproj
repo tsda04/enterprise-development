@@ -9,4 +9,8 @@
     <ItemGroup>
         <ProjectReference Include="..\BikeRental.Domain\BikeRental.Domain.csproj" />
     </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Abstractions\" />
+    </ItemGroup>
 </Project>
