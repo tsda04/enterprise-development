@@ -4,12 +4,10 @@ using BikeRental.Application.Services;
 using BikeRental.Domain.Interfaces;
 using BikeRental.Infrastructure.Database;
 using BikeRental.Infrastructure.Repositories;
-using Microsoft.AspNetCore.Builder;
+using BikeRental.Infrastructure.Services;
+using BikeRental.Infrastructure.Services.Impl;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Migrations;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
 using OpenTelemetry;
 using OpenTelemetry.Metrics;
 using OpenTelemetry.Resources;
@@ -31,8 +29,8 @@ public static class DependencyInjection
             {
                 options.ReturnHttpNotAcceptable = false; // 406
             })
-            .AddNewtonsoftJson() // заменить стандартный JSON на Newtonsoft.json
-            .AddXmlSerializerFormatters(); // отвечать в XML формате
+            .AddNewtonsoftJson(); // заменить стандартный JSON на Newtonsoft.json
+        //.AddXmlSerializerFormatters(); // отвечать в XML формате
     }
 
     /// <summary>
@@ -110,6 +108,9 @@ public static class DependencyInjection
     /// </summary>
     public static void AddServices(this WebApplicationBuilder builder)
     {
+        // Зарегистрировать сервис инициализации данных
+        builder.Services.AddScoped<ISeedDataService, SeedDataService>();
+        
         // Зарегистрировать сервисы прикладного уровня
         builder.Services.AddScoped<IBikeModelService, BikeModelService>();
         builder.Services.AddScoped<IBikeService, BikeService>();

@@ -32,7 +32,7 @@ public class SeedDataService(ApplicationDbContext dbContext) : ISeedDataService
                     WheelSize = faker.Random.Int(20, 29),
                     MaxCyclistWeight = faker.Random.Int(60, 120),
                     Weight = Math.Round(faker.Random.Double(7.0, 15.0), 2),
-                    BrakeType = faker.PickRandom("Disc", "Rim", "Drum"),
+                    BrakeType = faker.PickRandom("Road", "Sport", "Mountain","Hybrid"),
                     YearOfManufacture = faker.Date.Past(10).Year.ToString(),
                     RentPrice = Math.Round(faker.Random.Decimal(5.0m, 20.0m), 2)
                 };
@@ -93,8 +93,8 @@ public class SeedDataService(ApplicationDbContext dbContext) : ISeedDataService
             {
                 var lease = new Lease
                 {
-                    Renter = faker.PickRandom(renters),
-                    Bike = faker.PickRandom(bikes),
+                    RenterId = faker.PickRandom(renters).Id,
+                    BikeId = faker.PickRandom(bikes).Id,
                     RentalStartTime = faker.Date.Recent(10),
                     RentalDuration = faker.Random.Int(1, 72)
                 };

@@ -1,8 +1,5 @@
 ﻿using BikeRental.Api;
 using BikeRental.Api.Extensions;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 
 // Создать объект WebApplicationBuilder (построитель веб-приложения)
@@ -57,6 +54,9 @@ if (app.Environment.IsDevelopment())
     
     // Применить миграции базы данных (из DatabaceExtensions)
     await app.ApplyMigrationsAsync();
+    
+    // Инициализировать данные в бд
+    await app.SeedData();
 }
 
 // Использовать обработчики исключений (GlobalExceptionHandler, ValidationExceptionHandler)

@@ -21,6 +21,8 @@ internal static class LeaseMappings
     {
         return new Lease
         {
+            BikeId =  bike.Id,
+            RenterId =  renter.Id,
             Bike = bike,
             Renter = renter,
             RentalStartTime = dto.RentalStartTime,

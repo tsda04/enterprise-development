@@ -1,3 +1,5 @@
+using System.ComponentModel.DataAnnotations.Schema;
+
 namespace BikeRental.Domain.Models;
 
 /// <summary>
@@ -10,15 +12,11 @@ public class Lease
     /// </summary>
     public int Id { get; set; }
     
-    /// <summary>
-    /// Person who rents a bike
-    /// </summary>
-    public required Renter Renter { get; set; }
-
-    /// <summary>
-    /// Bike for rent
-    /// </summary>
-    public required Bike Bike { get; set; }
+    [ForeignKey(nameof(Bike))]
+    public required int BikeId { get; set; }
+    
+    [ForeignKey(nameof(Renter))]
+    public required int RenterId { get; set; }
 
     /// <summary>
     /// Rental start time
@@ -29,4 +27,14 @@ public class Lease
     /// Rental duration in hours
     /// </summary>
     public required int RentalDuration { get; set; }
+    
+    /// <summary>
+    /// Person who rents a bike
+    /// </summary>
+    public virtual Renter Renter { get; set; }
+
+    /// <summary>
+    /// Bike for rent
+    /// </summary>
+    public virtual Bike Bike { get; set; }
 }
