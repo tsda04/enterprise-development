@@ -5,6 +5,4 @@ namespace BikeRental.Domain.Interfaces;
 /// <summary>
 /// Интерфейс репозитория описывает контракт для работы с арендаторами
 /// </summary>
-public interface IRenterRepository : IRepository<Renter>
-{
-}
+public interface IRenterRepository : IRepository<Renter>;

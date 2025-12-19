@@ -38,11 +38,9 @@ public sealed class RenterService(IRenterRepository renterRepository) : IRenterS
 
     public async Task<RenterDto> Update(int id, RenterCreateUpdateDto dto)
     {
-        var createdEntity = await renterRepository.GetById(id);
-        if (createdEntity == null)
-        {
-            throw new KeyNotFoundException($"Entity with id {id} not found.");
-        }
+        var createdEntity = await renterRepository.GetById(id)
+        ?? throw new KeyNotFoundException($"Entity with id {id} not found.");
+        
         var entityToUpdate = dto.ToEntity();
         entityToUpdate.Id = id;
         await renterRepository.Update(entityToUpdate);

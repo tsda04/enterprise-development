@@ -25,6 +25,5 @@ public class BikeDto
     /// </summary>
     public required int ModelId { get; set; }
     
-    // model information
-    //public BikeModelDto? Model { get; set; }
+
 }

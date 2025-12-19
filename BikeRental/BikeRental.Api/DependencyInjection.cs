@@ -26,11 +26,10 @@ public static class DependencyInjection
     public static void AddControllers(this WebApplicationBuilder builder)
     {
         builder.Services.AddControllers(options =>
-            {
-                options.ReturnHttpNotAcceptable = false; // 406
-            })
-            .AddNewtonsoftJson(); // заменить стандартный JSON на Newtonsoft.json
-        //.AddXmlSerializerFormatters(); // отвечать в XML формате
+        {
+            options.ReturnHttpNotAcceptable = false; // 406
+        })
+        .AddNewtonsoftJson(); // заменить стандартный JSON на Newtonsoft.json
     }
 
     /// <summary>

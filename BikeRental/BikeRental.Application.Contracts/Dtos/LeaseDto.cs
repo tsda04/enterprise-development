@@ -30,7 +30,4 @@ public class LeaseDto
     /// </summary>
     public required int RentalDuration { get; set; }
     
-    //public RenterDto? Renter { get; set; }
-    //public BikeDto? Bike { get; set; }
-
 }

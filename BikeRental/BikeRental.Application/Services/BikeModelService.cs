@@ -7,7 +7,6 @@ namespace BikeRental.Application.Services;
 
 /// <summary>
 /// Application-сервис для работы с моделями велосипедов. Инкапсулирует бизнес-логику и доступ к репозиторию.
-/// На текущем этапе является тонкой обёрткой над IBikeModelRepository.
 /// </summary>
 public sealed class BikeModelService(IBikeModelRepository bikeModelRepository) : IBikeModelService
 {
@@ -38,11 +37,9 @@ public sealed class BikeModelService(IBikeModelRepository bikeModelRepository) :
 
     public async Task<BikeModelDto> Update(int id, BikeModelCreateUpdateDto dto)
     {
-        var createdEntity = await bikeModelRepository.GetById(id);
-        if (createdEntity == null)
-        {
-            throw new KeyNotFoundException($"Entity with id {id} not found.");
-        }
+        var createdEntity = await bikeModelRepository.GetById(id)
+        ?? throw new KeyNotFoundException($"Entity with id {id} not found.");
+        
         var entityToUpdate = dto.ToEntity();
         entityToUpdate.Id = id;
         await bikeModelRepository.Update(entityToUpdate);
