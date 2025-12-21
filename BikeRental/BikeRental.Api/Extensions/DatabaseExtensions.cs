@@ -14,8 +14,15 @@ public static class DatabaseExtensions
     /// <param name="app"></param>
     public static async Task ApplyMigrationsAsync(this WebApplication app)
     {
+        // мы не в HTTP запросе тк это запуск приложения
+        // поэтому создаем Scope(один из уровней DI контейнера) вручную, как бы новую область видимости для DI
+        // Scope гарантирует, что все зависимости будут правильно созданы и уничтожены
         using var scope = app.Services.CreateScope();
         await using var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+        // scope.ServiceProvider - DI контейнер в рамках созданного Scope
+        // GetRequiredService<T>() - получить сервис типа T
+        // Требует, чтобы сервис был зарегистрирован, иначе исключение
+        // DbContext реализует IAsyncDisposable (асинхронное освобождение ресурсов)
 
         try
         {

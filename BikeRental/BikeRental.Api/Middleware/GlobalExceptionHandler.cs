@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Diagnostics;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BikeRental.Api.Middleware;
@@ -25,7 +26,12 @@ public sealed class GlobalExceptionHandler(IProblemDetailsService problemDetails
                 Title = "Internal Server Error",
                 Detail = "An error occurred while processing your request. Please try again"
             }
-            
+            // TryWriteAsync() пишет ответ в поток HTTP
+            // 1. Пользователь кинул запрос например GET .../999
+            // 2. Контроллер отсылает в NullReferenceException - тк bikeModelService.GetById(id) вернет null.
+            // 3. ASP.NET Core ловит исключение
+            // 4. Вызывает GlobalExceptionHandler.TryHandleAsync()
+            // 5. ProblemDetailsService генерирует JSON ответ
         });
     }
 }
