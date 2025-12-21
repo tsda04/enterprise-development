@@ -15,41 +15,32 @@ public class BikeModelConfiguration : IEntityTypeConfiguration<BikeModel>
     /// <param name="builder"></param>
     public void Configure(EntityTypeBuilder<BikeModel> builder)
     {
-        // Установить наименование таблицы
         builder.ToTable("BikeModels");
 
-        // Первичный ключ
         builder.HasKey(b => b.Id);
         builder.Property(b => b.Id)
             .ValueGeneratedOnAdd();
 
-        // Тип велосипеда (enum BikeType) — храним как int по умолчанию
         builder.Property(b => b.Type)
             .IsRequired();
 
-        // Размер колеса
         builder.Property(b => b.WheelSize)
             .IsRequired();
 
-        // Максимальный вес велосипедиста
         builder.Property(b => b.MaxCyclistWeight)
             .IsRequired();
 
-        // Вес велосипеда
         builder.Property(b => b.Weight)
             .IsRequired();
 
-        // Тип тормозной системы
         builder.Property(b => b.BrakeType)
             .IsRequired()
             .HasMaxLength(50);
 
-        // Год выпуска модели (строка из 4 символов)
         builder.Property(b => b.YearOfManufacture)
             .IsRequired()
             .HasMaxLength(4);
 
-        // Стоимость аренды в час
         builder.Property(b => b.RentPrice)
             .IsRequired()
             .HasColumnType("decimal(10,2)");

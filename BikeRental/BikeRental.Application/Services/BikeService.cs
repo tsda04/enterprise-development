@@ -9,7 +9,7 @@ namespace BikeRental.Application.Services;
 /// Application-сервис для работы с велосипедами. Инкапсулирует бизнес-логику и доступ к репозиторию.
 /// На текущем этапе является тонкой обёрткой над IBikeRepository.
 /// </summary>
-public sealed class BikeService(IBikeRepository bikeRepository) : IBikeService
+public sealed class BikeService(IBikeRepository bikeRepository, IBikeModelRepository modelRepository) : IBikeService
 {
     public async Task<IEnumerable<BikeDto>> GetAll()
     {
@@ -24,7 +24,11 @@ public sealed class BikeService(IBikeRepository bikeRepository) : IBikeService
 
     public async Task<BikeDto> Create(BikeCreateUpdateDto dto)
     {
-        var id = await bikeRepository.Add(dto.ToEntity());
+        var model = await modelRepository.GetById(dto.ModelId)
+                   ?? throw new KeyNotFoundException($"Bike with id {dto.ModelId} not found.");
+        
+        var id = await bikeRepository.Add(dto.ToEntity(model));
+
         if (id > 0)
         {
             var createdEntity = await bikeRepository.GetById(id);
@@ -41,7 +45,10 @@ public sealed class BikeService(IBikeRepository bikeRepository) : IBikeService
         var createdEntity = await bikeRepository.GetById(id)
         ?? throw new KeyNotFoundException($"Entity with id {id} not found.");
         
-        var entityToUpdate = dto.ToEntity();
+        var model = await modelRepository.GetById(dto.ModelId)
+                    ?? throw new KeyNotFoundException($"Bike with id {dto.ModelId} not found.");
+        
+        var entityToUpdate = dto.ToEntity(model);
         entityToUpdate.Id = id;
         await bikeRepository.Update(entityToUpdate);
         var updatedEntity = await bikeRepository.GetById(id);

@@ -15,20 +15,16 @@ public class RenterConfiguration : IEntityTypeConfiguration<Renter>
     /// <param name="builder"></param>
     public void Configure(EntityTypeBuilder<Renter> builder)
     {
-        // Установить наименование таблицы
         builder.ToTable("Renters");
 
-        // Первичный ключ
         builder.HasKey(r => r.Id);
         builder.Property(r => r.Id)
             .ValueGeneratedOnAdd();
 
-        // Полное имя арендатора
         builder.Property(r => r.FullName)
             .IsRequired()
             .HasMaxLength(200);
 
-        // Номер телефона арендатора
         builder.Property(r => r.PhoneNumber)
             .IsRequired()
             .HasMaxLength(32);
