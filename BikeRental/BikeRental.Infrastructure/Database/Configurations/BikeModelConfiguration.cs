@@ -46,7 +46,7 @@ public class BikeModelConfiguration : IEntityTypeConfiguration<BikeModel>
             .HasColumnType("decimal(10,2)");
 
         // Индексы для типичных сценариев выборки
-        
+
         // Индекс по типу велосипеда
         builder.HasIndex(b => b.Type);
         // Индекс по комбинации типа велосипеда и размера колеса

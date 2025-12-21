@@ -10,12 +10,16 @@ public sealed class LeaseRepository(ApplicationDbContext dbContext) : ILeaseRepo
     public async Task<List<Lease>> GetAll()
     {
         return await dbContext.Leases
+            .Include(l => l.Bike)
+            .Include(l => l.Renter)
             .ToListAsync();
     }
 
     public async Task<Lease?> GetById(int id)
     {
         return await dbContext.Leases
+            .Include(l => l.Bike)
+            .Include(l => l.Renter)
             .FirstOrDefaultAsync(x => x.Id == id);
     }
 
@@ -28,10 +32,9 @@ public sealed class LeaseRepository(ApplicationDbContext dbContext) : ILeaseRepo
 
     public async Task Update(Lease entity)
     {
-        if (dbContext.Leases.Local.All(e => e.Id != entity.Id))
-        {
-            dbContext.Leases.Attach(entity);
-        }
+        Lease existing = await dbContext.Leases.FindAsync(entity.Id)
+                         ?? throw new KeyNotFoundException($"Lease with id {entity.Id} not found.");
+        dbContext.Entry(existing).CurrentValues.SetValues(entity);
         await dbContext.SaveChangesAsync();
     }
 

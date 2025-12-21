@@ -28,10 +28,9 @@ public class RenterConfiguration : IEntityTypeConfiguration<Renter>
         builder.Property(r => r.PhoneNumber)
             .IsRequired()
             .HasMaxLength(32);
-        
+
         // Уникальный индекс по номеру телефона
         builder.HasIndex(r => r.PhoneNumber)
             .IsUnique();
     }
 }
-

@@ -12,12 +12,11 @@ public static class DatabaseExtensions
     /// Применить все миграции к базе данных
     /// </summary>
     /// <param name="app"></param>
-    public static async Task ApplyMigrationsAsync(this WebApplication app) 
+    public static async Task ApplyMigrationsAsync(this WebApplication app)
     {
         using var scope = app.Services.CreateScope();
-        
         await using var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-        
+
         try
         {
             await dbContext.Database.MigrateAsync();

@@ -13,10 +13,10 @@ public class Lease
     public int Id { get; set; }
     
     [ForeignKey(nameof(Bike))]
-    public required int BikeId { get; set; }
+    public int BikeId { get; set; }
     
     [ForeignKey(nameof(Renter))]
-    public required int RenterId { get; set; }
+    public int RenterId { get; set; }
 
     /// <summary>
     /// Rental start time
@@ -31,10 +31,11 @@ public class Lease
     /// <summary>
     /// Person who rents a bike
     /// </summary>
-    public virtual Renter Renter { get; set; }
+    public required Renter Renter { get; set; } 
 
     /// <summary>
     /// Bike for rent
     /// </summary>
-    public virtual Bike Bike { get; set; }
+    public required Bike Bike { get; set; }
+    // сделала required тогда их айди автоматически должны установиться EF core
 }

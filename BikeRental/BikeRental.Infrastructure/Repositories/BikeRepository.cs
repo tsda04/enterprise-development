@@ -10,12 +10,14 @@ public sealed class BikeRepository(ApplicationDbContext dbContext) : IBikeReposi
     public async Task<List<Bike>> GetAll()
     {
         return await dbContext.Bikes
+            .Include(l => l.Model)
             .ToListAsync();
     }
 
     public async Task<Bike?> GetById(int id)
     {
         return await dbContext.Bikes
+            .Include(l => l.Model)
             .FirstOrDefaultAsync(x => x.Id == id);
     }
 
@@ -28,10 +30,11 @@ public sealed class BikeRepository(ApplicationDbContext dbContext) : IBikeReposi
 
     public async Task Update(Bike entity)
     {
-        if (dbContext.Bikes.Local.All(e => e.Id != entity.Id))
-        {
-            dbContext.Bikes.Attach(entity);
-        }
+        Bike existing = await dbContext.Bikes.FindAsync(entity.Id)
+                        ?? throw new KeyNotFoundException($"Bike with id {entity.Id} not found.");
+
+        dbContext.Entry(existing).CurrentValues.SetValues(entity);
+
         await dbContext.SaveChangesAsync();
     }
 
@@ -41,4 +44,3 @@ public sealed class BikeRepository(ApplicationDbContext dbContext) : IBikeReposi
         await dbContext.SaveChangesAsync();
     }
 }
-

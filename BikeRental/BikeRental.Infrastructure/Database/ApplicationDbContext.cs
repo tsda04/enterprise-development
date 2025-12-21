@@ -4,32 +4,28 @@ using Microsoft.EntityFrameworkCore;
 namespace BikeRental.Infrastructure.Database;
 
 /// <summary>
-/// Контекст базы данных приложения
-///
-/// Для создания миграции из командной строки:
-/// Initial -Context ApplicationDbContext -OutputDir Database/Migrations
-/// 
+///     Контекст базы данных приложения
 /// </summary>
 /// <param name="options"></param>
 public sealed class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : DbContext(options)
 {
     /// <summary>
-    /// Набор сущностей "BikeModel" (Модель велосипеда)
+    ///     Набор сущностей "BikeModel" (Модель велосипеда)
     /// </summary>
     public DbSet<BikeModel> BikeModels { get; set; }
 
     /// <summary>
-    /// Набор сущностей "Bike" (Велосипед)
+    ///     Набор сущностей "Bike" (Велосипед)
     /// </summary>
     public DbSet<Bike> Bikes { get; set; }
 
     /// <summary>
-    /// Набор сущностей "Renter" (Арендатор)
+    ///     Набор сущностей "Renter" (Арендатор)
     /// </summary>
     public DbSet<Renter> Renters { get; set; }
 
     /// <summary>
-    /// Набор сущностей "Lease" (Договор аренды)
+    ///     Набор сущностей "Lease" (Договор аренды)
     /// </summary>
     public DbSet<Lease> Leases { get; set; }
 

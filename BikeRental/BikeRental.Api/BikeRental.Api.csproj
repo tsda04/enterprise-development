@@ -14,9 +14,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\BikeRental.Application.Contracts\BikeRental.Application.Contracts.csproj" />
       <ProjectReference Include="..\BikeRental.Application\BikeRental.Application.csproj" />
-      <ProjectReference Include="..\BikeRental.Domain\BikeRental.Domain.csproj" />
       <ProjectReference Include="..\BikeRental.Infrastructure\BikeRental.Infrastructure.csproj" />
     </ItemGroup>
 

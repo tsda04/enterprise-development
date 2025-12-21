@@ -21,9 +21,8 @@ public class BikeDto
     public required string Color { get; set; }
 
     /// <summary>
-    /// Bike's model
+    /// Bike's model type
     /// </summary>
-    public required int ModelId { get; set; }
-    
+    public required string ModelType { get; set; }
 
 }

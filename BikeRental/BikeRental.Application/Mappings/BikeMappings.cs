@@ -12,17 +12,18 @@ internal static class BikeMappings
             Id = entity.Id,
             SerialNumber = entity.SerialNumber,
             Color = entity.Color,
-            ModelId = entity.ModelId
+            ModelType = entity.Model.BrakeType
         };
     }
     
-    public static Bike ToEntity(this BikeCreateUpdateDto dto)
+    public static Bike ToEntity(this BikeCreateUpdateDto dto, BikeModel model)
     {
         return new Bike
         {
             SerialNumber = dto.SerialNumber,
             Color = dto.Color,
-            ModelId = dto.ModelId
+            ModelId = dto.ModelId,
+            Model = model,
         };
     }
 }

@@ -28,10 +28,11 @@ public sealed class RenterRepository(ApplicationDbContext dbContext) : IRenterRe
 
     public async Task Update(Renter entity)
     {
-        if (dbContext.Renters.Local.All(e => e.Id != entity.Id))
-        {
-            dbContext.Renters.Attach(entity);
-        }
+        Renter existing = await dbContext.Renters.FindAsync(entity.Id)
+                          ?? throw new KeyNotFoundException($"Renter with id {entity.Id} not found.");
+
+        dbContext.Entry(existing).CurrentValues.SetValues(entity);
+
         await dbContext.SaveChangesAsync();
     }
 
@@ -41,4 +42,3 @@ public sealed class RenterRepository(ApplicationDbContext dbContext) : IRenterRe
         await dbContext.SaveChangesAsync();
     }
 }
-

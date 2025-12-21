@@ -7,16 +7,16 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Bogus" Version="35.6.5" />
+        <PackageReference Include="Bogus" Version="35.6.5"/>
         <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.22">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
-        <PackageReference Include="MySql.EntityFrameworkCore" Version="8.0.20" />
+        <PackageReference Include="MySql.EntityFrameworkCore" Version="8.0.20"/>
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\BikeRental.Application\BikeRental.Application.csproj" />
+        <ProjectReference Include="..\BikeRental.Domain\BikeRental.Domain.csproj"/>
     </ItemGroup>
 
 </Project>

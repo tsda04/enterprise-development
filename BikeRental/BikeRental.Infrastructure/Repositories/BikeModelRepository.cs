@@ -31,10 +31,11 @@ public sealed class BikeModelRepository(ApplicationDbContext dbContext) : IBikeM
 
     public async Task Update(BikeModel entity)
     {
-        if (dbContext.BikeModels.Local.All(e => e.Id != entity.Id))
-        {
-            dbContext.BikeModels.Attach(entity);
-        }
+        BikeModel existing = await dbContext.BikeModels.FindAsync(entity.Id)
+                             ?? throw new KeyNotFoundException($"Model with id {entity.Id} not found.");
+
+        dbContext.Entry(existing).CurrentValues.SetValues(entity);
+
         await dbContext.SaveChangesAsync();
     }
 

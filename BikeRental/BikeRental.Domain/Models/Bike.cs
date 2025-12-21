@@ -28,5 +28,5 @@ public class Bike
     /// <summary>
     /// Bike's model
     /// </summary>
-    public virtual BikeModel Model { get; init; } = null!;
+    public required BikeModel Model { get; init; } = null!;
 }
