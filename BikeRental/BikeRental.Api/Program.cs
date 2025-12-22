@@ -50,4 +50,4 @@ if (app.Environment.IsDevelopment())
 
 app.MapControllers(); 
 
-await app.RunAsync().ConfigureAwait(false);
+await app.RunAsync();
