@@ -28,8 +28,7 @@ public static class DependencyInjection
         builder.Services.AddControllers(options =>
         {
             options.ReturnHttpNotAcceptable = false; // 406
-        })
-        .AddNewtonsoftJson(); // заменить стандартный JSON на Newtonsoft.json
+        });
     }
 
     /// <summary>

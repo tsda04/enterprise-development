@@ -25,7 +25,7 @@ public sealed class BikeService(IBikeRepository bikeRepository, IBikeModelReposi
     public async Task<BikeDto> Create(BikeCreateUpdateDto dto)
     {
         var model = await modelRepository.GetById(dto.ModelId)
-                   ?? throw new KeyNotFoundException($"Bike with id {dto.ModelId} not found.");
+                   ?? throw new ArgumentException($"Model with id {dto.ModelId} not found.");
         
         var id = await bikeRepository.Add(dto.ToEntity(model));
 
@@ -43,10 +43,10 @@ public sealed class BikeService(IBikeRepository bikeRepository, IBikeModelReposi
     public async Task<BikeDto> Update(int id, BikeCreateUpdateDto dto)
     {
         var createdEntity = await bikeRepository.GetById(id)
-        ?? throw new KeyNotFoundException($"Entity with id {id} not found.");
+        ?? throw new KeyNotFoundException($"Bike with id {id} not found.");
         
         var model = await modelRepository.GetById(dto.ModelId)
-                    ?? throw new KeyNotFoundException($"Bike with id {dto.ModelId} not found.");
+                    ?? throw new ArgumentException($"Model with id {dto.ModelId} not found.");
         
         var entityToUpdate = dto.ToEntity(model);
         entityToUpdate.Id = id;

@@ -3,6 +3,7 @@ using BikeRental.Api.Extensions;
 using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
+
 builder.AddControllers();
 builder.AddErrorHandling();
 
@@ -29,6 +30,8 @@ builder.AddServices();
 
 var app = builder.Build();
 
+app.UseExceptionHandler();
+
 if (app.Environment.IsDevelopment())
 {
     // https://localhost:<port>/swagger
@@ -44,8 +47,6 @@ if (app.Environment.IsDevelopment())
     
     await app.SeedData();
 }
-
-app.UseExceptionHandler();
 
 app.MapControllers(); 
 

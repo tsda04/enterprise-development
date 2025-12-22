@@ -29,10 +29,10 @@ public sealed class LeaseService(
     public async Task<LeaseDto> Create(LeaseCreateUpdateDto dto)
     {
         var bike = await bikeRepository.GetById(dto.BikeId)
-        ?? throw new KeyNotFoundException($"Bike with id {dto.BikeId} not found.");
+        ?? throw new ArgumentException($"Bike with id {dto.BikeId} not found.");
         
         var renter = await renterRepository.GetById(dto.RenterId)
-        ?? throw new KeyNotFoundException($"Renter with id {dto.RenterId} not found.");
+        ?? throw new ArgumentException($"Renter with id {dto.RenterId} not found.");
         
         var id = await leaseRepository.Add(dto.ToEntity(bike, renter));
         if (id > 0)
@@ -49,13 +49,13 @@ public sealed class LeaseService(
     public async Task<LeaseDto> Update(int id, LeaseCreateUpdateDto dto)
     {
         var createdEntity = await leaseRepository.GetById(id)
-        ?? throw new KeyNotFoundException($"Entity with id {id} not found.");
+        ?? throw new KeyNotFoundException($"Lease with id {id} not found.");
         
         var bike = await bikeRepository.GetById(dto.BikeId)
-        ?? throw new KeyNotFoundException($"Bike with id {dto.BikeId} not found.");
+        ?? throw new ArgumentException($"Bike with id {dto.BikeId} not found.");
        
         var renter = await renterRepository.GetById(dto.RenterId)
-        ?? throw new KeyNotFoundException($"Renter with id {dto.RenterId} not found.");
+        ?? throw new ArgumentException($"Renter with id {dto.RenterId} not found.");
         
         var entityToUpdate = dto.ToEntity(bike, renter);
         entityToUpdate.Id = id;
