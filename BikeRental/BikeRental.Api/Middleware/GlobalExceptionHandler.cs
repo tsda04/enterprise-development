@@ -6,22 +6,11 @@ namespace BikeRental.Api.Middleware;
 /// <summary>
 /// Глобальный обработчик исключений с логированием
 /// </summary>
-public sealed class GlobalExceptionHandler : IExceptionHandler
+public sealed class GlobalExceptionHandler(
+    IProblemDetailsService problemDetailsService,
+    ILogger<GlobalExceptionHandler> logger)
+    : IExceptionHandler
 {
-    private readonly IProblemDetailsService _problemDetailsService; // сервис для создания ответов об ошибках
-    private readonly ILogger<GlobalExceptionHandler> _logger;
-    
-    /// <summary>
-    /// Инициализирует новый экземпляр глобального обработчика исключений с зависимостями для логирования и генерации ProblemDetails.
-    /// </summary>
-    public GlobalExceptionHandler(
-        IProblemDetailsService problemDetailsService,
-        ILogger<GlobalExceptionHandler> logger)
-    {
-        _problemDetailsService = problemDetailsService;
-        _logger = logger;
-    }
-
     /// <summary>
     /// Попытаться обработать исключение
     /// </summary>
@@ -35,7 +24,7 @@ public sealed class GlobalExceptionHandler : IExceptionHandler
         
         var problemDetails = CreateProblemDetails(exception);
 
-        return await _problemDetailsService.TryWriteAsync(new ProblemDetailsContext
+        return await problemDetailsService.TryWriteAsync(new ProblemDetailsContext
         {
             HttpContext = httpContext,
             Exception = exception,
@@ -75,7 +64,7 @@ public sealed class GlobalExceptionHandler : IExceptionHandler
         // Для 404 и 400 - Warning с кратким сообщением
         if (exception is KeyNotFoundException or ArgumentException or InvalidOperationException)
         {
-            _logger.LogWarning(
+            logger.LogWarning(
                 "[{StatusCode}] {Method} {Path} - {Message}",
                 GetStatusCode(exception),
                 method,
@@ -85,7 +74,7 @@ public sealed class GlobalExceptionHandler : IExceptionHandler
         // Для остальных - Error с полным stack trace
         else
         {
-            _logger.LogError(
+            logger.LogError(
                 exception,
                 "[{StatusCode}] {Method} {Path} - {ExceptionType}: {Message}",
                 GetStatusCode(exception),
@@ -99,7 +88,7 @@ public sealed class GlobalExceptionHandler : IExceptionHandler
     /// <summary>
     /// Создание ProblemDetails
     /// </summary>
-    private ProblemDetails CreateProblemDetails(Exception exception)
+    private static ProblemDetails CreateProblemDetails(Exception exception)
     {
         var statusCode = GetStatusCode(exception);
         
@@ -114,37 +103,31 @@ public sealed class GlobalExceptionHandler : IExceptionHandler
     /// <summary>
     /// Получение статус кода
     /// </summary>
-    private int GetStatusCode(Exception exception)
+    private static int GetStatusCode(Exception exception) => exception switch
     {
-        return exception switch
-        {
-            KeyNotFoundException => StatusCodes.Status404NotFound,
-            ArgumentException => StatusCodes.Status400BadRequest,
-            InvalidOperationException => StatusCodes.Status400BadRequest,
-            UnauthorizedAccessException => StatusCodes.Status401Unauthorized,
-            _ => StatusCodes.Status500InternalServerError
-        };
-    }
+        KeyNotFoundException => StatusCodes.Status404NotFound,
+        ArgumentException => StatusCodes.Status400BadRequest,
+        InvalidOperationException => StatusCodes.Status400BadRequest,
+        UnauthorizedAccessException => StatusCodes.Status401Unauthorized,
+        _ => StatusCodes.Status500InternalServerError
+    };
 
     /// <summary>
     /// Получение заголовка
     /// </summary>
-    private string GetTitle(Exception exception)
+    private static string GetTitle(Exception exception) => exception switch
     {
-        return exception switch
-        {
-            KeyNotFoundException => "Resource not found",
-            ArgumentException => "Bad request",
-            InvalidOperationException => "Invalid operation",
-            UnauthorizedAccessException => "Unauthorized",
-            _ => "Internal server error"
-        };
-    }
+        KeyNotFoundException => "Resource not found",
+        ArgumentException => "Bad request",
+        InvalidOperationException => "Invalid operation",
+        UnauthorizedAccessException => "Unauthorized",
+        _ => "Internal server error"
+    };
 
     /// <summary>
     /// Получение деталей
     /// </summary>
-    private string GetDetail(Exception exception)
+    private static string GetDetail(Exception exception)
     {
         // Для клиентских ошибок показываем сообщение исключения
         if (exception is KeyNotFoundException or ArgumentException or InvalidOperationException)
