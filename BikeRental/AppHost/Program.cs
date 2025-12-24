@@ -18,13 +18,16 @@ var bikeRentalDb =
 
 builder.AddProject<Projects.BikeRental_Generator_Nats_Host>("bike-rental-nats-generator")
     .WaitFor(nats)
-    .WithEnvironment("Nats__Url", "nats://nats:4222")
+    .WithEnvironment("Nats__Url", "nats://localhost:4222")
     .WithEnvironment("Nats__StreamName", "bike-rental-stream")
     .WithEnvironment("Nats__SubjectName", "bike-rental.leases");
 
 builder.AddProject<Projects.BikeRental_Api>("bike-rental-api")
     .WaitFor(bikeRentalDb)
-    .WithReference(bikeRentalDb);
-
+    .WaitFor(nats)
+    .WithReference(bikeRentalDb)
+    .WithEnvironment("Nats__Url", "nats://localhost:4222")
+    .WithEnvironment("Nats__StreamName", "bike-rental-stream")
+    .WithEnvironment("Nats__SubjectName", "bike-rental.leases");
 
 builder.Build().Run();

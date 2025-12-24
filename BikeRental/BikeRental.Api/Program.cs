@@ -1,6 +1,9 @@
 ﻿using BikeRental.Api;
+using BikeRental.Api.Messaging;
 using BikeRental.Api.Extensions;
 using Microsoft.OpenApi.Models;
+using Microsoft.Extensions.Options;
+using NATS.Client.Core;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -27,6 +30,36 @@ builder.AddObservability();
 builder.AddDatabase();
 builder.AddRepositories();
 builder.AddServices();
+
+var natsSettingsSection = builder.Configuration.GetSection("NatsConsumerSettings");
+
+if (natsSettingsSection.Exists())
+{
+    Console.WriteLine($"Nats.Url: {natsSettingsSection["Url"]}");
+    Console.WriteLine($"Nats.StreamName: {natsSettingsSection["StreamName"]}");
+}
+
+builder.Services.Configure<NatsConsumerSettings>(builder.Configuration.GetSection("NatsConsumerSettings"));
+builder.Services.AddSingleton<INatsConnection>(sp =>
+{
+    var settings = sp.GetRequiredService<IOptions<NatsConsumerSettings>>().Value;
+    var connectRetryDelayMs = Math.Max(0, settings.ConnectRetryDelayMs);
+    var reconnectWaitMin = TimeSpan.FromMilliseconds(connectRetryDelayMs);
+    var reconnectWaitMax = TimeSpan.FromMilliseconds(
+        Math.Max(connectRetryDelayMs, connectRetryDelayMs * Math.Max(settings.RetryBackoffFactor, 1)));
+
+    var options = new NatsOpts
+    {
+        Url = settings.Url,
+        RetryOnInitialConnect = settings.ConnectRetryAttempts > 1,
+        MaxReconnectRetry = Math.Max(0, settings.ConnectRetryAttempts),
+        ReconnectWaitMin = reconnectWaitMin,
+        ReconnectWaitMax = reconnectWaitMax,
+        ReconnectJitter = TimeSpan.FromMilliseconds(connectRetryDelayMs * 0.2)
+    };
+    return new NatsConnection(options);
+});
+builder.Services.AddHostedService<NatsLeaseConsumer>();
 
 var app = builder.Build();
 

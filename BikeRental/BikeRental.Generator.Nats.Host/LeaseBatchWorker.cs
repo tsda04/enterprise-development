@@ -1,4 +1,6 @@
 using Microsoft.Extensions.Options;
+using BikeRental.Application.Contracts.Dtos;
+using System.Text.Json;
 
 namespace BikeRental.Generator.Nats.Host;
 
@@ -33,6 +35,29 @@ public sealed class LeaseBatchWorker(
     private async Task SendBatchAsync(LeaseGenerationOptions settings, CancellationToken stoppingToken)
     {
         var batch = generator.GenerateBatch(settings);
+        LogBatchSample(batch, settings);
         await producer.SendAsync(batch, stoppingToken);
+    }
+
+    private void LogBatchSample(IList<LeaseCreateUpdateDto> batch, LeaseGenerationOptions settings)
+    {
+        if (settings.LogBatchSampleCount <= 0)
+        {
+            return;
+        }
+
+        var sampleCount = Math.Min(settings.LogBatchSampleCount, batch.Count);
+        if (sampleCount == 0)
+        {
+            return;
+        }
+
+        var sample = batch.Take(sampleCount).ToList();
+        var payload = JsonSerializer.Serialize(sample);
+        logger.LogInformation(
+            "Generated lease batch sample ({sampleCount}/{total}): {payload}",
+            sampleCount,
+            batch.Count,
+            payload);
     }
 }

@@ -19,7 +19,20 @@ builder.Services.Configure<LeaseGenerationOptions>(builder.Configuration.GetSect
 builder.Services.AddSingleton<INatsConnection>(sp =>
 {
     var settings = sp.GetRequiredService<IOptions<NatsSettings>>().Value;
-    var options = new NatsOpts { Url = settings.Url };
+    var connectRetryDelayMs = Math.Max(0, settings.ConnectRetryDelayMs);
+    var reconnectWaitMin = TimeSpan.FromMilliseconds(connectRetryDelayMs);
+    var reconnectWaitMax = TimeSpan.FromMilliseconds(
+        Math.Max(connectRetryDelayMs, connectRetryDelayMs * Math.Max(settings.RetryBackoffFactor, 1)));
+
+    var options = new NatsOpts
+    {
+        Url = settings.Url,
+        RetryOnInitialConnect = settings.ConnectRetryAttempts > 1,
+        MaxReconnectRetry = Math.Max(0, settings.ConnectRetryAttempts),
+        ReconnectWaitMin = reconnectWaitMin,
+        ReconnectWaitMax = reconnectWaitMax,
+        ReconnectJitter = TimeSpan.FromMilliseconds(connectRetryDelayMs * 0.2)
+    };
     return new NatsConnection(options);
 });
 
