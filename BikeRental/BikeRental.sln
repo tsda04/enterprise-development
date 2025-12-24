@@ -14,6 +14,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BikeRental.Application.Cont
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AppHost", "AppHost\AppHost.csproj", "{FFC8D593-B70B-430D-8FC5-A9F3EE1DDE17}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BikeRental.Generator.Nats.Host", "BikeRental.Generator.Nats.Host\BikeRental.Generator.Nats.Host.csproj", "{3292CC61-FAAA-47C4-87BE-76E6CA5BB1C9}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -48,5 +50,9 @@ Global
 		{FFC8D593-B70B-430D-8FC5-A9F3EE1DDE17}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FFC8D593-B70B-430D-8FC5-A9F3EE1DDE17}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FFC8D593-B70B-430D-8FC5-A9F3EE1DDE17}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3292CC61-FAAA-47C4-87BE-76E6CA5BB1C9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3292CC61-FAAA-47C4-87BE-76E6CA5BB1C9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3292CC61-FAAA-47C4-87BE-76E6CA5BB1C9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3292CC61-FAAA-47C4-87BE-76E6CA5BB1C9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
