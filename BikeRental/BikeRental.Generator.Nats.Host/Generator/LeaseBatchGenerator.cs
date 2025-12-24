@@ -1,6 +1,6 @@
 using BikeRental.Application.Contracts.Dtos;
 
-namespace BikeRental.Generator.Nats.Host;
+namespace BikeRental.Generator.Nats.Host.Generator;
 
 public sealed class LeaseBatchGenerator
 {

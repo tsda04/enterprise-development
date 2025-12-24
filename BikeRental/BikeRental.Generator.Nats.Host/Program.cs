@@ -1,6 +1,8 @@
 using BikeRental.Generator.Nats.Host;
 using Microsoft.Extensions.Options;
 using NATS.Client.Core;
+using BikeRental.Generator.Nats.Host.Generator;
+
 
 var builder = Host.CreateApplicationBuilder(args);
 

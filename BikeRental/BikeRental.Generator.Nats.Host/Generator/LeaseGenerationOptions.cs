@@ -1,6 +1,5 @@
-namespace BikeRental.Generator.Nats.Host;
+namespace BikeRental.Generator.Nats.Host.Generator;
 
-// нет проверки на существование велика и арендатора с таким айди
 public sealed class LeaseGenerationOptions
 {
     public int BatchSize { get; init; } = 10;
@@ -14,5 +13,4 @@ public sealed class LeaseGenerationOptions
     public int RentalStartDaysBackMax { get; init; } = 10;
     public IReadOnlyList<int> BikeIds { get; init; } = Array.Empty<int>();
     public IReadOnlyList<int> RenterIds { get; init; } = Array.Empty<int>();
-    public int LogBatchSampleCount { get; init; } = 0;
 }
