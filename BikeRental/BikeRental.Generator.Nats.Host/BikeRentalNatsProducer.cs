@@ -1,49 +1,57 @@
+using System.Text.Json;
+using BikeRental.Application.Contracts.Dtos;
+using Microsoft.Extensions.Options;
+using NATS.Client.Core;
+using NATS.Client.JetStream;
+using NATS.Client.JetStream.Models;
+using NATS.Net;
+
 namespace BikeRental.Generator.Nats.Host;
 
-/// <summary>
-/// Имплементация для отправки контрактов через стрим Nats
-/// </summary>
-/// <param name="configuration">Конфигурация</param>
-/// <param name="connection">Подключение к Nats</param>
-/// <param name="logger">Логгер</param>
-public class BikeRentalNatsProducer
+public sealed class BikeRentalNatsProducer(
+    IOptions<NatsSettings> settings,
+    INatsConnection connection,
+    ILogger<BikeRentalNatsProducer> logger)
 {
-    // TODO по примеру из лекций создать/обновить JetStream stream
-}
+    private readonly string _streamName = GetRequired(settings.Value.StreamName, "StreamName");
+    private readonly string _subjectName = GetRequired(settings.Value.SubjectName, "SubjectName");
+    
+    public async Task SendAsync(IList<LeaseCreateUpdateDto> batch, CancellationToken cancellationToken)
+    {
+        if (batch.Count == 0)
+        {
+            logger.LogInformation("Skipping empty lease batch.");
+            return;
+        }
 
-/*
-namespace BookStore.Generator.Nats.Host
-   {
-       /// <summary>
-       /// Имплементация для отправки контрактов через стрим Nats
-       /// </summary>
-       /// <param name="configuration">Конфигурация</param>
-       /// <param name="connection">Подключение к Nats</param>
-       /// <param name="logger">Логгер</param>
-       public class BookStoreNatsProducer(IConfiguration configuration, INatsConnection connection, ILogger<BookStoreNatsProducer> logger)
-       {
-           private readonly string _streamName = configuration.GetSection("Nats")["StreamName"] ?? throw new KeyNotFoundException("StreamName is not configured in Nats section.");
-           private readonly string _subjectName = configuration.GetSection("Nats")["SubjectName"] ?? throw new KeyNotFoundException("SubjectName is not configured in Nats section.");
-   
-           /// <inheritdoc/>
-           public async Task SendAsync(IList<BookAuthorCreateUpdateDto> batch)
-           {
-               try
-               {
-                   await connection.ConnectAsync();
-                   var context = connection.CreateJetStreamContext();
-                   var stream = await context.CreateOrUpdateStreamAsync(new NATS.Client.JetStream.Models.StreamConfig(_streamName, [_subjectName]));
-   
-                   logger.LogInformation("Establishing a stream {stream} with subject {subject}", _streamName, _subjectName);
-   
-                   await context.PublishAsync(_subjectName, JsonSerializer.SerializeToUtf8Bytes(batch));
-                   logger.LogInformation("Sent a batch of {count} contracts to {subject} of {stream}", batch.Count, _subjectName, _streamName);
-               }
-               catch (Exception ex)
-               {
-                   logger.LogError(ex, "Exception occured during sending a batch of {count} contracts to {stream}/{subject}", batch.Count, _streamName, _subjectName);
-               }
-           }
-       }
-   }
-*/
+        try
+        {
+            await connection.ConnectAsync();
+            var context = connection.CreateJetStreamContext();
+
+            var streamConfig = new StreamConfig(_streamName, new List<string> { _subjectName });
+            await context.CreateOrUpdateStreamAsync(streamConfig, cancellationToken);
+
+            var payload = JsonSerializer.SerializeToUtf8Bytes(batch);
+            await context.PublishAsync(
+                subject: _subjectName,
+                data: payload,
+                cancellationToken: cancellationToken);
+
+            logger.LogInformation("Sent a batch of {count} leases to {subject} of {stream}", batch.Count, _subjectName, _streamName);
+        }
+        catch (Exception ex)
+        {
+            logger.LogError(ex, "Exception occurred during sending a batch of {count} leases to {stream}/{subject}", batch.Count, _streamName, _subjectName);
+        }
+    }
+
+    private static string GetRequired(string? value, string key) // мини проверка
+    {
+        if (string.IsNullOrWhiteSpace(value))
+        {
+            throw new KeyNotFoundException($"{key} is not configured in Nats section.");
+        }
+        return value;
+    }
+}

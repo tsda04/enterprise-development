@@ -24,6 +24,7 @@
 
     <ItemGroup>
         <ProjectReference Include="..\BikeRental.Api\BikeRental.Api.csproj" />
+        <ProjectReference Include="..\BikeRental.Generator.Nats.Host\BikeRental.Generator.Nats.Host.csproj" />
     </ItemGroup>
 
 </Project>

@@ -9,6 +9,8 @@
 
     <ItemGroup>
         <PackageReference Include="Microsoft.Extensions.Hosting" Version="8.0.1"/>
+        <PackageReference Include="NATS.Client.Core" Version="2.7.0"/>
+        <PackageReference Include="NATS.Client.JetStream" Version="2.7.0"/>
     </ItemGroup>
 
     <ItemGroup>

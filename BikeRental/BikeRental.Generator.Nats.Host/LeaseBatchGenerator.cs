@@ -2,20 +2,6 @@ using BikeRental.Application.Contracts.Dtos;
 
 namespace BikeRental.Generator.Nats.Host;
 
-public sealed class LeaseGenerationOptions 
-    //todo потом убрать в другой класс и может как-то связать с дто, чтобы самим не прописывать
-    // нет проверки на существование велика и арендатора с таким айди
-{
-    public int BatchSize { get; init; } = 10;
-    public int BikeIdMin { get; init; } = 1;
-    public int BikeIdMax { get; init; } = 30;
-    public int RenterIdMin { get; init; } = 1;
-    public int RenterIdMax { get; init; } = 20;
-    public int RentalDurationMinHours { get; init; } = 1;
-    public int RentalDurationMaxHours { get; init; } = 72;
-    public int RentalStartDaysBackMax { get; init; } = 10;
-}
-
 public sealed class LeaseBatchGenerator
 {
     public IList<LeaseCreateUpdateDto> GenerateBatch(LeaseGenerationOptions settings)
