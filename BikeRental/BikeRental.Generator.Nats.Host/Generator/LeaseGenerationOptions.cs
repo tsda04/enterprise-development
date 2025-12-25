@@ -11,6 +11,4 @@ public sealed class LeaseGenerationOptions
     public int RentalDurationMinHours { get; init; } = 1;
     public int RentalDurationMaxHours { get; init; } = 72;
     public int RentalStartDaysBackMax { get; init; } = 10;
-    public IReadOnlyList<int> BikeIds { get; init; } = Array.Empty<int>();
-    public IReadOnlyList<int> RenterIds { get; init; } = Array.Empty<int>();
 }

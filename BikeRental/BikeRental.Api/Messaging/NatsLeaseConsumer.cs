@@ -2,8 +2,6 @@ using System.Text.Json;
 using BikeRental.Application.Contracts.Dtos;
 using BikeRental.Application.Interfaces;
 using BikeRental.Infrastructure.Database;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using NATS.Client.Core;
 using NATS.Client.JetStream;
@@ -148,7 +146,7 @@ internal sealed class NatsLeaseConsumer(
         CancellationToken stoppingToken,
         Func<Task> action)
     {
-        _ = await ExecuteWithRetryAsync<object>(
+        _ = await ExecuteWithRetryAsync(
             operation,
             attempts,
             baseDelay,
@@ -208,7 +206,7 @@ internal sealed class NatsLeaseConsumer(
 
     private static INatsDeserialize<byte[]> BuildDeserializer(INatsConnection connection)
     {
-        var registry = connection.Opts.SerializerRegistry ?? new NatsDefaultSerializerRegistry();
+        var registry = connection.Opts.SerializerRegistry;
         return registry.GetDeserializer<byte[]>();
     }
 

@@ -1,3 +1,4 @@
+using Bogus;
 using BikeRental.Application.Contracts.Dtos;
 
 namespace BikeRental.Generator.Nats.Host.Generator;
@@ -8,67 +9,60 @@ public sealed class LeaseBatchGenerator
     {
         Validate(settings);
 
-        var batch = new List<LeaseCreateUpdateDto>(settings.BatchSize);
-        for (var i = 0; i < settings.BatchSize; i++)
-        {
-            var renterId = PickId(settings.RenterIds, settings.RenterIdMin, settings.RenterIdMax);
-            var bikeId = PickId(settings.BikeIds, settings.BikeIdMin, settings.BikeIdMax);
-            var duration = Random.Shared.Next(settings.RentalDurationMinHours, settings.RentalDurationMaxHours + 1);
-            var daysBack = Random.Shared.Next(0, settings.RentalStartDaysBackMax + 1);
-            var hoursBack = Random.Shared.Next(0, 24);
+        var faker = CreateFaker(settings);
+        return faker.Generate(settings.BatchSize);
+    }
 
-            batch.Add(new LeaseCreateUpdateDto
-            {
-                RenterId = renterId,
-                BikeId = bikeId,
-                RentalDuration = duration,
-                RentalStartTime = DateTime.UtcNow.AddDays(-daysBack).AddHours(-hoursBack)
-            });
-        }
+    private static Faker<LeaseCreateUpdateDto> CreateFaker(
+        LeaseGenerationOptions settings)
+    {
+        return new Faker<LeaseCreateUpdateDto>()
+            .RuleFor(x => x.RenterId, f => 
+                f.Random.Int(settings.RenterIdMin, settings.RenterIdMax))
+            .RuleFor(x => x.BikeId, f => 
+                f.Random.Int(settings.BikeIdMin, settings.BikeIdMax))
+            .RuleFor(x => x.RentalDuration, f =>
+                f.Random.Int(
+                    settings.RentalDurationMinHours,
+                    settings.RentalDurationMaxHours))
+            .RuleFor(x => x.RentalStartTime, f =>
+                GeneratePastStartTime(
+                    settings.RentalStartDaysBackMax,
+                    f));
+    }
 
-        return batch;
+    private static DateTime GeneratePastStartTime(
+        int maxDaysBack,
+        Faker f)
+    {
+        var daysBack = f.Random.Int(0, maxDaysBack);
+        var hoursBack = f.Random.Int(0, 23);
+
+        return DateTime.UtcNow
+            .AddDays(-daysBack)
+            .AddHours(-hoursBack);
     }
 
     private static void Validate(LeaseGenerationOptions settings)
     {
-        if (settings.BikeIds.Count == 0 && settings.BikeIdMin > settings.BikeIdMax)
-        {
-            throw new InvalidOperationException("LeaseGeneration.BikeIdMin must be <= LeaseGeneration.BikeIdMax.");
-        }
+        if (settings.BatchSize <= 0)
+            throw new InvalidOperationException("BatchSize must be > 0.");
 
-        if (settings.RenterIds.Count == 0 && settings.RenterIdMin > settings.RenterIdMax)
-        {
-            throw new InvalidOperationException("LeaseGeneration.RenterIdMin must be <= LeaseGeneration.RenterIdMax.");
-        }
+        if (settings.BikeIdMin > settings.BikeIdMax)
+            throw new InvalidOperationException(
+                "BikeIdMin must be <= BikeIdMax.");
 
-        if (settings.BikeIds.Any(id => id <= 0))
-        {
-            throw new InvalidOperationException("LeaseGeneration.BikeIds must contain only positive IDs.");
-        }
+        if (settings.RenterIdMin > settings.RenterIdMax)
+            throw new InvalidOperationException(
+                "RenterIdMin must be <= RenterIdMax.");
 
-        if (settings.RenterIds.Any(id => id <= 0))
-        {
-            throw new InvalidOperationException("LeaseGeneration.RenterIds must contain only positive IDs.");
-        }
-
-        if (settings.RentalDurationMinHours > settings.RentalDurationMaxHours)
-        {
-            throw new InvalidOperationException("LeaseGeneration.RentalDurationMinHours must be <= LeaseGeneration.RentalDurationMaxHours.");
-        }
+        if (settings.RentalDurationMinHours >
+            settings.RentalDurationMaxHours)
+            throw new InvalidOperationException(
+                "RentalDurationMinHours must be <= RentalDurationMaxHours.");
 
         if (settings.RentalStartDaysBackMax < 0)
-        {
-            throw new InvalidOperationException("LeaseGeneration.RentalStartDaysBackMax must be >= 0.");
-        }
-    }
-
-    private static int PickId(IReadOnlyList<int> ids, int min, int max)
-    {
-        if (ids.Count > 0)
-        {
-            return ids[Random.Shared.Next(ids.Count)];
-        }
-
-        return Random.Shared.Next(min, max + 1);
+            throw new InvalidOperationException(
+                "RentalStartDaysBackMax must be >= 0.");
     }
 }
