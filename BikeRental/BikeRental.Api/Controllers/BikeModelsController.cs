@@ -21,7 +21,8 @@ public sealed class BikeModelsController(IBikeModelService bikeModelService) : C
     public async Task<ActionResult<IEnumerable<BikeModelDto>>> GetAll()
     {
         var models = await bikeModelService.GetAll();
-        return Ok(models);
+        var sortedModels = models.OrderBy(model => model.Id).ToList();
+        return Ok(sortedModels);
     }
 
     /// <summary>

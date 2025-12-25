@@ -17,9 +17,10 @@ public sealed class BikesController(IBikeService bikeService) : ControllerBase
     /// </summary>
     [HttpGet]
     public async Task<ActionResult<IEnumerable<BikeDto>>> GetAll()
-    {
+    {   
         var bikes = await bikeService.GetAll();
-        return Ok(bikes);
+        var sortedBikes = bikes.OrderBy(bike => bike.Id).ToList();
+        return Ok(sortedBikes);
     }
 
     /// <summary>

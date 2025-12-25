@@ -19,7 +19,8 @@ public sealed class RentersController(IRenterService renterService) : Controller
     public async Task<ActionResult<IEnumerable<RenterDto>>> GetAll()
     {
         var renters = await renterService.GetAll();
-        return Ok(renters);
+        var sortedRenters = renters.OrderBy(renter => renter.Id).ToList();
+        return Ok(sortedRenters);
     }
 
     /// <summary>

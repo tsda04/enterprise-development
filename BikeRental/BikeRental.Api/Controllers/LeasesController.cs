@@ -19,7 +19,8 @@ public sealed class LeasesController(ILeaseService leaseService) : ControllerBas
     public async Task<ActionResult<IEnumerable<LeaseDto>>> GetAll()
     {
         var leases = await leaseService.GetAll();
-        return Ok(leases);
+        var sortedLeases = leases.OrderBy(l => l.Id).ToList();
+        return Ok(sortedLeases);
     }
 
     /// <summary>
