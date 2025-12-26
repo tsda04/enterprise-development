@@ -1,16 +1,17 @@
-using Microsoft.Extensions.Options;
+using BikeRental.Application.Contracts.Dtos;
 using BikeRental.Generator.Nats.Host.Generator;
+using Microsoft.Extensions.Options;
 
 namespace BikeRental.Generator.Nats.Host;
+
 public sealed class LeaseBatchWorker(
-    LeaseBatchGenerator generator,
     BikeRentalNatsProducer producer,
     IOptions<LeaseGenerationOptions> options,
     ILogger<LeaseBatchWorker> logger) : BackgroundService
 {
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
-        var settings = options.Value;
+        LeaseGenerationOptions settings = options.Value;
         if (settings.BatchSize <= 0)
         {
             logger.LogError("LeaseGeneration.BatchSize must be greater than 0.");
@@ -32,8 +33,7 @@ public sealed class LeaseBatchWorker(
 
     private async Task SendBatchAsync(LeaseGenerationOptions settings, CancellationToken stoppingToken)
     {
-        var batch = generator.GenerateBatch(settings);
+        IList<LeaseCreateUpdateDto> batch = LeaseBatchGenerator.GenerateBatch(settings);
         await producer.SendAsync(batch, stoppingToken);
     }
 }
-

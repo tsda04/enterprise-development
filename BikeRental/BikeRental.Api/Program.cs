@@ -1,11 +1,11 @@
 ﻿using BikeRental.Api;
-using BikeRental.Api.Messaging;
 using BikeRental.Api.Extensions;
-using Microsoft.OpenApi.Models;
+using BikeRental.Api.Messaging;
 using Microsoft.Extensions.Options;
+using Microsoft.OpenApi.Models;
 using NATS.Client.Core;
 
-var builder = WebApplication.CreateBuilder(args);
+WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
 builder.AddControllers();
 builder.AddErrorHandling();
@@ -19,9 +19,9 @@ builder.Services.AddSwaggerGen(options =>
         Version = "v1",
         Description = "API для управления сервисом проката велосипедов"
     });
-    
+
     var basePath = AppContext.BaseDirectory;
-    var xmlPathApi = Path.Combine(basePath, $"BikeRental.Api.xml");
+    var xmlPathApi = Path.Combine(basePath, "BikeRental.Api.xml");
     options.IncludeXmlComments(xmlPathApi);
 });
 
@@ -31,7 +31,7 @@ builder.AddDatabase();
 builder.AddRepositories();
 builder.AddServices();
 
-var natsSettingsSection = builder.Configuration.GetSection("NatsConsumerSettings");
+IConfigurationSection natsSettingsSection = builder.Configuration.GetSection("NatsConsumerSettings");
 
 if (natsSettingsSection.Exists())
 {
@@ -42,7 +42,7 @@ if (natsSettingsSection.Exists())
 builder.Services.Configure<NatsConsumerSettings>(builder.Configuration.GetSection("NatsConsumerSettings"));
 builder.Services.AddSingleton<INatsConnection>(sp =>
 {
-    var settings = sp.GetRequiredService<IOptions<NatsConsumerSettings>>().Value;
+    NatsConsumerSettings settings = sp.GetRequiredService<IOptions<NatsConsumerSettings>>().Value;
     var connectRetryDelayMs = Math.Max(0, settings.ConnectRetryDelayMs);
     var reconnectWaitMin = TimeSpan.FromMilliseconds(connectRetryDelayMs);
     var reconnectWaitMax = TimeSpan.FromMilliseconds(
@@ -61,7 +61,7 @@ builder.Services.AddSingleton<INatsConnection>(sp =>
 });
 builder.Services.AddHostedService<NatsLeaseConsumer>();
 
-var app = builder.Build();
+WebApplication app = builder.Build();
 
 app.UseExceptionHandler();
 
@@ -75,12 +75,12 @@ if (app.Environment.IsDevelopment())
         c.RoutePrefix = "swagger";
         c.ShowCommonExtensions();
     });
-    
+
     await app.ApplyMigrationsAsync();
-    
+
     await app.SeedData();
 }
 
-app.MapControllers(); 
+app.MapControllers();
 
 await app.RunAsync();

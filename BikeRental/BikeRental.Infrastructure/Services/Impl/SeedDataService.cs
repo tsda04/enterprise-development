@@ -7,13 +7,13 @@ using Microsoft.EntityFrameworkCore;
 namespace BikeRental.Infrastructure.Services.Impl;
 
 /// <summary>
-/// Сервис инициализации данных
+///     Сервис инициализации данных
 /// </summary>
 /// <param name="dbContext"></param>
 public class SeedDataService(ApplicationDbContext dbContext) : ISeedDataService
 {
     /// <summary>
-    /// Выполнить инициализацию данных
+    ///     Выполнить инициализацию данных
     /// </summary>
     public async Task SeedDataAsync()
     {
@@ -64,7 +64,7 @@ public class SeedDataService(ApplicationDbContext dbContext) : ISeedDataService
         // Создать велосипеды, если они отсутствуют
         if (!await dbContext.Bikes.AnyAsync())
         {
-            var bikeModels = await dbContext.BikeModels.ToListAsync();
+            List<BikeModel> bikeModels = await dbContext.BikeModels.ToListAsync();
             var bikes = new List<Bike>();
             for (var i = 0; i < 30; i++)
             {
@@ -86,8 +86,8 @@ public class SeedDataService(ApplicationDbContext dbContext) : ISeedDataService
         // некоторых велосипедов
         if (!await dbContext.Leases.AnyAsync())
         {
-            var renters = await dbContext.Renters.ToListAsync();
-            var bikes = await dbContext.Bikes.ToListAsync();
+            List<Renter> renters = await dbContext.Renters.ToListAsync();
+            List<Bike> bikes = await dbContext.Bikes.ToListAsync();
             var leases = new List<Lease>();
 
             for (var i = 0; i < 15; i++)

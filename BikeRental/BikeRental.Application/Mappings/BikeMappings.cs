@@ -15,7 +15,7 @@ internal static class BikeMappings
             ModelType = entity.Model.BrakeType
         };
     }
-    
+
     public static Bike ToEntity(this BikeCreateUpdateDto dto, BikeModel model)
     {
         return new Bike
@@ -23,7 +23,7 @@ internal static class BikeMappings
             SerialNumber = dto.SerialNumber,
             Color = dto.Color,
             ModelId = dto.ModelId,
-            Model = model,
+            Model = model
         };
     }
 }

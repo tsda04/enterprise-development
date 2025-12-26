@@ -5,64 +5,66 @@ using Microsoft.AspNetCore.Mvc;
 namespace BikeRental.Api.Controllers;
 
 /// <summary>
-/// Контроллер описывает конечные точки для работы с ресурсом
-/// "Lease" (договор на аренду велосипеда)
+///     Контроллер описывает конечные точки для работы с ресурсом
+///     "Lease" (договор на аренду велосипеда)
 /// </summary>
 [ApiController]
 [Route("leases")]
 public sealed class LeasesController(ILeaseService leaseService) : ControllerBase
 {
     /// <summary>
-    /// Получить все договора на аренду велосипедов
+    ///     Получить все договора на аренду велосипедов
     /// </summary>
     [HttpGet]
     public async Task<ActionResult<IEnumerable<LeaseDto>>> GetAll()
     {
-        var leases = await leaseService.GetAll();
+        IEnumerable<LeaseDto> leases = await leaseService.GetAll();
         var sortedLeases = leases.OrderBy(l => l.Id).ToList();
         return Ok(sortedLeases);
     }
 
     /// <summary>
-    /// Получить договор на аренду велосипеда по идентификатору
+    ///     Получить договор на аренду велосипеда по идентификатору
     /// </summary>
     [HttpGet("{id:int}")]
     public async Task<ActionResult<LeaseDto>> GetById(int id)
     {
-        var lease = await leaseService.GetById(id);
+        LeaseDto? lease = await leaseService.GetById(id);
         if (lease is null)
         {
             return NotFound();
         }
+
         return Ok(lease);
     }
 
     /// <summary>
-    /// Создать договор на аренду велосипеда
+    ///     Создать договор на аренду велосипеда
     /// </summary>
     [HttpPost]
     public async Task<ActionResult<LeaseDto>> Create([FromBody] LeaseCreateUpdateDto dto)
     {
-        var created = await leaseService.Create(dto);
+        LeaseDto created = await leaseService.Create(dto);
         return CreatedAtAction(nameof(GetById), new { id = created.Id }, created);
     }
 
     /// <summary>
-    /// Обновить состояние текущего договора на аренду велосипеда
+    ///     Обновить состояние текущего договора на аренду велосипеда
     /// </summary>
     [HttpPut("{id:int}")]
     public async Task<ActionResult<LeaseDto>> Update(int id, [FromBody] LeaseCreateUpdateDto dto)
     {
-        var updated = await leaseService.Update(id, dto);
+        LeaseDto? updated = await leaseService.Update(id, dto);
         if (updated is null)
         {
             return NotFound();
         }
+
         return Ok(updated);
     }
 
     /// <summary>
-    /// Удалить договор на аренду велосипеда по идентификатору
+    ///     Удалить договор на аренду велосипеда по идентификатору
     /// </summary>
     [HttpDelete("{id:int}")]
     public async Task<IActionResult> Delete(int id)
@@ -72,6 +74,7 @@ public sealed class LeasesController(ILeaseService leaseService) : ControllerBas
         {
             return NotFound();
         }
+
         return NoContent();
     }
 }

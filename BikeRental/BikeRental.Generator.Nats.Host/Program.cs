@@ -1,13 +1,12 @@
 using BikeRental.Generator.Nats.Host;
+using BikeRental.Generator.Nats.Host.Generator;
 using Microsoft.Extensions.Options;
 using NATS.Client.Core;
-using BikeRental.Generator.Nats.Host.Generator;
+
+HostApplicationBuilder builder = Host.CreateApplicationBuilder(args);
 
 
-var builder = Host.CreateApplicationBuilder(args);
-
-
-var natsSettingsSection = builder.Configuration.GetSection("NatsSettings");
+IConfigurationSection natsSettingsSection = builder.Configuration.GetSection("NatsSettings");
 
 if (natsSettingsSection.Exists())
 {
@@ -20,7 +19,7 @@ builder.Services.Configure<LeaseGenerationOptions>(builder.Configuration.GetSect
 
 builder.Services.AddSingleton<INatsConnection>(sp =>
 {
-    var settings = sp.GetRequiredService<IOptions<NatsSettings>>().Value;
+    NatsSettings settings = sp.GetRequiredService<IOptions<NatsSettings>>().Value;
     var connectRetryDelayMs = Math.Max(0, settings.ConnectRetryDelayMs);
     var reconnectWaitMin = TimeSpan.FromMilliseconds(connectRetryDelayMs);
     var reconnectWaitMax = TimeSpan.FromMilliseconds(
@@ -42,6 +41,5 @@ builder.Services.AddSingleton<LeaseBatchGenerator>();
 builder.Services.AddSingleton<BikeRentalNatsProducer>();
 builder.Services.AddHostedService<LeaseBatchWorker>();
 
-var host = builder.Build();
+IHost host = builder.Build();
 await host.RunAsync();
-//host.Run();

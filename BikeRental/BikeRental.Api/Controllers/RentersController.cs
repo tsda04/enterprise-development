@@ -5,68 +5,70 @@ using Microsoft.AspNetCore.Mvc;
 namespace BikeRental.Api.Controllers;
 
 /// <summary>
-/// Контроллер описывает конечные точки для работы с ресурсом
-/// "Renter" (арендатор)
+///     Контроллер описывает конечные точки для работы с ресурсом
+///     "Renter" (арендатор)
 /// </summary>
 [ApiController]
 [Route("renters")]
 public sealed class RentersController(IRenterService renterService) : ControllerBase
 {
     /// <summary>
-    /// Получить всех арендаторов
+    ///     Получить всех арендаторов
     /// </summary>
     [HttpGet]
     public async Task<ActionResult<IEnumerable<RenterDto>>> GetAll()
     {
-        var renters = await renterService.GetAll();
+        IEnumerable<RenterDto> renters = await renterService.GetAll();
         var sortedRenters = renters.OrderBy(renter => renter.Id).ToList();
         return Ok(sortedRenters);
     }
 
     /// <summary>
-    /// Получить арендатора по идентификатору
+    ///     Получить арендатора по идентификатору
     /// </summary>
     /// <param name="id"></param>
     [HttpGet("{id:int}")]
     public async Task<ActionResult<RenterDto>> GetById(int id)
     {
-        var renter = await renterService.GetById(id);
+        RenterDto? renter = await renterService.GetById(id);
         if (renter is null)
         {
             return NotFound();
         }
+
         return Ok(renter);
     }
 
     /// <summary>
-    /// Создать нового арендатора
+    ///     Создать нового арендатора
     /// </summary>
     /// <param name="dto"></param>
     [HttpPost]
     public async Task<ActionResult<RenterDto>> Create([FromBody] RenterCreateUpdateDto dto)
     {
-        var created = await renterService.Create(dto);
+        RenterDto created = await renterService.Create(dto);
         return CreatedAtAction(nameof(GetById), new { id = created.Id }, created);
     }
 
     /// <summary>
-    /// Обновить существующего арендатора
+    ///     Обновить существующего арендатора
     /// </summary>
     /// <param name="id"></param>
     /// <param name="dto"></param>
     [HttpPut("{id:int}")]
     public async Task<ActionResult<RenterDto>> Update(int id, [FromBody] RenterCreateUpdateDto dto)
     {
-        var updated = await renterService.Update(id, dto);
+        RenterDto? updated = await renterService.Update(id, dto);
         if (updated is null)
         {
             return NotFound();
         }
+
         return Ok(updated);
     }
 
     /// <summary>
-    /// Удалить арендатора по идентификатору
+    ///     Удалить арендатора по идентификатору
     /// </summary>
     /// <param name="id"></param>
     [HttpDelete("{id:int}")]
@@ -77,6 +79,7 @@ public sealed class RentersController(IRenterService renterService) : Controller
         {
             return NotFound();
         }
+
         return NoContent();
     }
 }

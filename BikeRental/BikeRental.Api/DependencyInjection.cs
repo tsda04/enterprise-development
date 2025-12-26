@@ -16,12 +16,12 @@ using OpenTelemetry.Trace;
 namespace BikeRental.Api;
 
 /// <summary>
-/// Настройка зависимостей приложения
+///     Настройка зависимостей приложения
 /// </summary>
 public static class DependencyInjection
 {
     /// <summary>
-    /// Зарегистрировать и настроить сервисы контроллеров
+    ///     Зарегистрировать и настроить сервисы контроллеров
     /// </summary>
     public static void AddControllers(this WebApplicationBuilder builder)
     {
@@ -32,17 +32,17 @@ public static class DependencyInjection
     }
 
     /// <summary>
-    /// Зарегистрировать и настроить сервисы обработки ошибок
+    ///     Зарегистрировать и настроить сервисы обработки ошибок
     /// </summary>
     public static void AddErrorHandling(this WebApplicationBuilder builder)
     {
         builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
-        
+
         builder.Services.AddProblemDetails();
     }
 
     /// <summary>
-    /// Зарегистрировать и настроить сервисы OpenTelemetry
+    ///     Зарегистрировать и настроить сервисы OpenTelemetry
     /// </summary>
     public static void AddObservability(this WebApplicationBuilder builder)
     {
@@ -68,14 +68,13 @@ public static class DependencyInjection
         // Настроить ведение журнала OpenTelemetry
         builder.Logging.AddOpenTelemetry(options =>
         {
-            options.IncludeScopes = true;           // Включить области
+            options.IncludeScopes = true; // Включить области
             options.IncludeFormattedMessage = true; // Включить форматированные сообщения
         });
-        
     }
 
     /// <summary>
-    /// Зарегистрировать и настроить сервисы взаимодействия с базой данных
+    ///     Зарегистрировать и настроить сервисы взаимодействия с базой данных
     /// </summary>
     public static void AddDatabase(this WebApplicationBuilder builder)
     {
@@ -91,7 +90,7 @@ public static class DependencyInjection
     }
 
     /// <summary>
-    /// Зарегистрировать репозитории
+    ///     Зарегистрировать репозитории
     /// </summary>
     public static void AddRepositories(this WebApplicationBuilder builder)
     {
@@ -102,13 +101,13 @@ public static class DependencyInjection
     }
 
     /// <summary>
-    /// Регистрация сервисов общего назначения
+    ///     Регистрация сервисов общего назначения
     /// </summary>
     public static void AddServices(this WebApplicationBuilder builder)
     {
         // Зарегистрировать сервис инициализации данных
         builder.Services.AddScoped<ISeedDataService, SeedDataService>();
-        
+
         // Зарегистрировать сервисы прикладного уровня
         builder.Services.AddScoped<IBikeModelService, BikeModelService>();
         builder.Services.AddScoped<IBikeService, BikeService>();

@@ -8,13 +8,13 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Bogus" Version="35.6.5" />
+        <PackageReference Include="Bogus" Version="35.6.5"/>
         <PackageReference Include="Microsoft.Extensions.Hosting" Version="8.0.1"/>
         <PackageReference Include="NATS.Client.Core" Version="2.7.0"/>
         <PackageReference Include="NATS.Client.JetStream" Version="2.7.0"/>
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\BikeRental.Application.Contracts\BikeRental.Application.Contracts.csproj" />
+        <ProjectReference Include="..\BikeRental.Application.Contracts\BikeRental.Application.Contracts.csproj"/>
     </ItemGroup>
 </Project>

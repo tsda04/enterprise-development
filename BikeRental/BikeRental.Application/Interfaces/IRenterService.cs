@@ -3,7 +3,7 @@ using BikeRental.Application.Contracts.Dtos;
 namespace BikeRental.Application.Interfaces;
 
 /// <summary>
-/// Service for managing renters.
+///     Service for managing renters.
 /// </summary>
 public interface IRenterService
 {

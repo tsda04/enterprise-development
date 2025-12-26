@@ -2,6 +2,7 @@ using System.Text.Json;
 using BikeRental.Application.Contracts.Dtos;
 using BikeRental.Application.Interfaces;
 using BikeRental.Infrastructure.Database;
+using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.Extensions.Options;
 using NATS.Client.Core;
 using NATS.Client.JetStream;
@@ -16,8 +17,8 @@ internal sealed class NatsLeaseConsumer(
     IServiceScopeFactory scopeFactory,
     ILogger<NatsLeaseConsumer> logger) : BackgroundService
 {
-    private readonly NatsConsumerSettings _settings = settings.Value;
     private readonly INatsDeserialize<byte[]> _deserializer = BuildDeserializer(connection);
+    private readonly NatsConsumerSettings _settings = settings.Value;
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
@@ -27,17 +28,18 @@ internal sealed class NatsLeaseConsumer(
             "connect to NATS",
             _settings.ConnectRetryAttempts,
             TimeSpan.FromMilliseconds(_settings.ConnectRetryDelayMs),
-            stoppingToken,
-            async () => await connection.ConnectAsync());
+            async () => await connection.ConnectAsync(),
+            stoppingToken);
 
-        var context = connection.CreateJetStreamContext();
-        var streamConfig = new StreamConfig(_settings.StreamName, new List<string> { _settings.SubjectName });
+        INatsJSContext context = connection.CreateJetStreamContext();
+        var streamConfig = new StreamConfig(_settings.StreamName, [_settings.SubjectName]);
+
         await ExecuteWithRetryAsync(
             "create/update stream",
             _settings.ConnectRetryAttempts,
             TimeSpan.FromMilliseconds(_settings.ConnectRetryDelayMs),
-            stoppingToken,
-            async () => await context.CreateOrUpdateStreamAsync(streamConfig, stoppingToken));
+            async () => await context.CreateOrUpdateStreamAsync(streamConfig, stoppingToken),
+            stoppingToken);
 
         var consumerConfig = new ConsumerConfig
         {
@@ -51,12 +53,12 @@ internal sealed class NatsLeaseConsumer(
             MaxDeliver = Math.Max(1, _settings.MaxDeliver)
         };
 
-        var consumer = await ExecuteWithRetryAsync(
+        INatsJSConsumer consumer = await ExecuteWithRetryAsync(
             "create/update consumer",
             _settings.ConnectRetryAttempts,
             TimeSpan.FromMilliseconds(_settings.ConnectRetryDelayMs),
-            stoppingToken,
-            async () => await context.CreateOrUpdateConsumerAsync(_settings.StreamName, consumerConfig, stoppingToken));
+            async () => await context.CreateOrUpdateConsumerAsync(_settings.StreamName, consumerConfig, stoppingToken),
+            stoppingToken);
 
         var consumeOptions = new NatsJSConsumeOpts
         {
@@ -68,14 +70,16 @@ internal sealed class NatsLeaseConsumer(
         {
             try
             {
-                await foreach (var msg in consumer.ConsumeAsync(_deserializer, consumeOptions, stoppingToken))
+                await foreach (INatsJSMsg<byte[]> msg in consumer.ConsumeAsync(_deserializer, consumeOptions,
+                                   stoppingToken))
                 {
                     await HandleMessageAsync(msg, stoppingToken);
                 }
             }
             catch (Exception ex) when (!stoppingToken.IsCancellationRequested)
             {
-                logger.LogError(ex, "Error while consuming leases from NATS. Retrying in {delay}ms.", _settings.ConsumeRetryDelayMs);
+                logger.LogError(ex, "Error while consuming leases from NATS. Retrying in {delay}ms.",
+                    _settings.ConsumeRetryDelayMs);
                 await Task.Delay(Math.Max(0, _settings.ConsumeRetryDelayMs), stoppingToken);
             }
         }
@@ -127,15 +131,16 @@ internal sealed class NatsLeaseConsumer(
 
     private async Task SaveBatchAsync(IReadOnlyList<LeaseCreateUpdateDto> leases, CancellationToken stoppingToken)
     {
-        await using var scope = scopeFactory.CreateAsyncScope();
-        var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-        var leaseService = scope.ServiceProvider.GetRequiredService<ILeaseService>();
+        await using AsyncServiceScope scope = scopeFactory.CreateAsyncScope();
+        ApplicationDbContext dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+        ILeaseService leaseService = scope.ServiceProvider.GetRequiredService<ILeaseService>();
 
-        await using var transaction = await dbContext.Database.BeginTransactionAsync(stoppingToken);
-        foreach (var lease in leases)
+        await using IDbContextTransaction transaction = await dbContext.Database.BeginTransactionAsync(stoppingToken);
+        foreach (LeaseCreateUpdateDto lease in leases)
         {
             await leaseService.Create(lease);
         }
+
         await transaction.CommitAsync(stoppingToken);
     }
 
@@ -143,30 +148,30 @@ internal sealed class NatsLeaseConsumer(
         string operation,
         int attempts,
         TimeSpan baseDelay,
-        CancellationToken stoppingToken,
-        Func<Task> action)
+        Func<Task> action,
+        CancellationToken stoppingToken)
     {
         _ = await ExecuteWithRetryAsync(
             operation,
             attempts,
             baseDelay,
-            stoppingToken,
             async () =>
             {
                 await action();
                 return new object();
-            });
+            },
+            stoppingToken);
     }
 
     private async Task<T> ExecuteWithRetryAsync<T>(
         string operation,
         int attempts,
         TimeSpan baseDelay,
-        CancellationToken stoppingToken,
-        Func<Task<T>> action)
+        Func<Task<T>> action,
+        CancellationToken stoppingToken)
     {
         var retries = Math.Max(1, attempts);
-        var delay = baseDelay;
+        TimeSpan delay = baseDelay;
         var backoff = _settings.RetryBackoffFactor <= 0 ? 2 : _settings.RetryBackoffFactor;
 
         for (var attempt = 1; attempt <= retries; attempt++)
@@ -206,7 +211,7 @@ internal sealed class NatsLeaseConsumer(
 
     private static INatsDeserialize<byte[]> BuildDeserializer(INatsConnection connection)
     {
-        var registry = connection.Opts.SerializerRegistry;
+        INatsSerializerRegistry registry = connection.Opts.SerializerRegistry;
         return registry.GetDeserializer<byte[]>();
     }
 

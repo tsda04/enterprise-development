@@ -13,16 +13,23 @@ public sealed class BikeRentalNatsProducer(
     INatsConnection connection,
     ILogger<BikeRentalNatsProducer> logger)
 {
-    private readonly string _streamName = GetRequired(settings.Value.StreamName, "StreamName");
-    private readonly string _subjectName = GetRequired(settings.Value.SubjectName, "SubjectName");
-   
     // для настройки повторных попыток - ретраи
     private readonly int _connectRetryAttempts = Math.Max(1, settings.Value.ConnectRetryAttempts);
-    private readonly TimeSpan _connectRetryDelay = TimeSpan.FromMilliseconds(Math.Max(0, settings.Value.ConnectRetryDelayMs));
+
+    private readonly TimeSpan _connectRetryDelay =
+        TimeSpan.FromMilliseconds(Math.Max(0, settings.Value.ConnectRetryDelayMs));
+
     private readonly int _publishRetryAttempts = Math.Max(1, settings.Value.PublishRetryAttempts);
-    private readonly TimeSpan _publishRetryDelay = TimeSpan.FromMilliseconds(Math.Max(0, settings.Value.PublishRetryDelayMs));
-    private readonly double _retryBackoffFactor = settings.Value.RetryBackoffFactor <= 0 ? 2 : settings.Value.RetryBackoffFactor;
-    
+
+    private readonly TimeSpan _publishRetryDelay =
+        TimeSpan.FromMilliseconds(Math.Max(0, settings.Value.PublishRetryDelayMs));
+
+    private readonly double _retryBackoffFactor =
+        settings.Value.RetryBackoffFactor <= 0 ? 2 : settings.Value.RetryBackoffFactor;
+
+    private readonly string _streamName = GetRequired(settings.Value.StreamName, "StreamName");
+    private readonly string _subjectName = GetRequired(settings.Value.SubjectName, "SubjectName");
+
 
     public async Task SendAsync(IList<LeaseCreateUpdateDto> batch, CancellationToken cancellationToken)
     {
@@ -38,23 +45,23 @@ public sealed class BikeRentalNatsProducer(
             // вызов с повторными попытками
             await ExecuteWithRetryAsync(
                 "connect to NATS",
-                _connectRetryAttempts,// сколько раз пытаться
-                _connectRetryDelay,// начальная задержка
-                cancellationToken,// токен отмены
-                async () => await connection.ConnectAsync());
+                _connectRetryAttempts, // сколько раз пытаться
+                _connectRetryDelay, // начальная задержка
+                async () => await connection.ConnectAsync(),
+                cancellationToken);
 
-            var context = connection.CreateJetStreamContext();
+            INatsJSContext context = connection.CreateJetStreamContext();
 
-            var streamConfig = new StreamConfig(_streamName, new List<string> { _subjectName });
-            
-            
+            var streamConfig = new StreamConfig(_streamName, [_subjectName]);
+
+
             // await context.CreateOrUpdateStreamAsync(streamConfig, cancellationToken);
             await ExecuteWithRetryAsync(
                 "create/update stream",
                 _publishRetryAttempts,
                 _publishRetryDelay,
-                cancellationToken,
-                async () => await context.CreateOrUpdateStreamAsync(streamConfig, cancellationToken));
+                async () => await context.CreateOrUpdateStreamAsync(streamConfig, cancellationToken),
+                cancellationToken);
 
             var payload = JsonSerializer.SerializeToUtf8Bytes(batch);
 
@@ -63,21 +70,21 @@ public sealed class BikeRentalNatsProducer(
                 "publish batch",
                 _publishRetryAttempts,
                 _publishRetryDelay,
-                cancellationToken,
                 async () => await context.PublishAsync(
-                    subject: _subjectName, 
-                    data: payload,
-                    cancellationToken: cancellationToken));
+                    _subjectName,
+                    payload,
+                    cancellationToken: cancellationToken),
+                cancellationToken);
 
             logger.LogInformation(
-                "Sent a batch of {count} leases to {subject} of {stream}", 
+                "Sent a batch of {count} leases to {subject} of {stream}",
                 batch.Count, _subjectName, _streamName);
         }
         catch (Exception ex)
         {
             logger.LogError(
-                ex, 
-                "Exception occurred during sending a batch of {count} leases to {stream}/{subject}", 
+                ex,
+                "Exception occurred during sending a batch of {count} leases to {stream}/{subject}",
                 batch.Count, _streamName, _subjectName);
         }
     }
@@ -85,12 +92,12 @@ public sealed class BikeRentalNatsProducer(
     // механизм повторных попыток
     private async Task ExecuteWithRetryAsync(
         string operation,
-        int attempts,// Максимальное количество попыток
-        TimeSpan baseDelay,// Начальная задержка
-        CancellationToken cancellationToken,// Токен отмены
-        Func<Task> action)// Операция для выполнения
+        int attempts, // Максимальное количество попыток
+        TimeSpan baseDelay, // Начальная задержка
+        Func<Task> action, // Операция для выполнения
+        CancellationToken cancellationToken) // Токен отмены
     {
-        var delay = baseDelay;
+        TimeSpan delay = baseDelay;
         for (var attempt = 1; attempt <= attempts; attempt++)
         {
             try
@@ -111,7 +118,7 @@ public sealed class BikeRentalNatsProducer(
                         attempts,
                         delay);
                     await Task.Delay(delay, cancellationToken);
-                    
+
                     // увеличить задержку
                     delay = TimeSpan.FromMilliseconds(delay.TotalMilliseconds * _retryBackoffFactor);
                 }
@@ -134,6 +141,7 @@ public sealed class BikeRentalNatsProducer(
         {
             throw new KeyNotFoundException($"{key} is not configured in Nats section.");
         }
+
         return value;
     }
 }

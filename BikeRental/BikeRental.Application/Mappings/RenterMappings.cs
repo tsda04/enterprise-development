@@ -14,7 +14,7 @@ internal static class RenterMappings
             PhoneNumber = entity.PhoneNumber
         };
     }
-    
+
     public static Renter ToEntity(this RenterCreateUpdateDto dto)
     {
         return new Renter

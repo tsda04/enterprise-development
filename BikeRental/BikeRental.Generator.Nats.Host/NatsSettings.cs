@@ -1,5 +1,8 @@
 namespace BikeRental.Generator.Nats.Host;
-// для типизированной конфигурации
+
+/// <summary>
+///     Класс для типизированной конфигурации
+/// </summary>
 public sealed class NatsSettings
 {
     public string Url { get; init; } = "nats://localhost:4222";

@@ -19,7 +19,7 @@ internal static class BikeModelMappings
             RentPrice = entity.RentPrice
         };
     }
-    
+
     public static BikeModel ToEntity(this BikeModelCreateUpdateDto dto)
     {
         return new BikeModel

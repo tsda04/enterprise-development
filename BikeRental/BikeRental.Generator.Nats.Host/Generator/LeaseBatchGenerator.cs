@@ -1,15 +1,15 @@
-using Bogus;
 using BikeRental.Application.Contracts.Dtos;
+using Bogus;
 
 namespace BikeRental.Generator.Nats.Host.Generator;
 
 public sealed class LeaseBatchGenerator
 {
-    public IList<LeaseCreateUpdateDto> GenerateBatch(LeaseGenerationOptions settings)
+    public static IList<LeaseCreateUpdateDto> GenerateBatch(LeaseGenerationOptions settings)
     {
         Validate(settings);
 
-        var faker = CreateFaker(settings);
+        Faker<LeaseCreateUpdateDto> faker = CreateFaker(settings);
         return faker.Generate(settings.BatchSize);
     }
 
@@ -17,9 +17,9 @@ public sealed class LeaseBatchGenerator
         LeaseGenerationOptions settings)
     {
         return new Faker<LeaseCreateUpdateDto>()
-            .RuleFor(x => x.RenterId, f => 
+            .RuleFor(x => x.RenterId, f =>
                 f.Random.Int(settings.RenterIdMin, settings.RenterIdMax))
-            .RuleFor(x => x.BikeId, f => 
+            .RuleFor(x => x.BikeId, f =>
                 f.Random.Int(settings.BikeIdMin, settings.BikeIdMax))
             .RuleFor(x => x.RentalDuration, f =>
                 f.Random.Int(
@@ -46,23 +46,33 @@ public sealed class LeaseBatchGenerator
     private static void Validate(LeaseGenerationOptions settings)
     {
         if (settings.BatchSize <= 0)
+        {
             throw new InvalidOperationException("BatchSize must be > 0.");
+        }
 
         if (settings.BikeIdMin > settings.BikeIdMax)
+        {
             throw new InvalidOperationException(
                 "BikeIdMin must be <= BikeIdMax.");
+        }
 
         if (settings.RenterIdMin > settings.RenterIdMax)
+        {
             throw new InvalidOperationException(
                 "RenterIdMin must be <= RenterIdMax.");
+        }
 
         if (settings.RentalDurationMinHours >
             settings.RentalDurationMaxHours)
+        {
             throw new InvalidOperationException(
                 "RentalDurationMinHours must be <= RentalDurationMaxHours.");
+        }
 
         if (settings.RentalStartDaysBackMax < 0)
+        {
             throw new InvalidOperationException(
                 "RentalStartDaysBackMax must be >= 0.");
+        }
     }
 }

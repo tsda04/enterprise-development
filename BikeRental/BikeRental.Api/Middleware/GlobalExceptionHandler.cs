@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace BikeRental.Api.Middleware;
 
 /// <summary>
-/// Глобальный обработчик исключений с логированием
+///     Глобальный обработчик исключений с логированием
 /// </summary>
 public sealed class GlobalExceptionHandler(
     IProblemDetailsService problemDetailsService,
@@ -12,7 +12,7 @@ public sealed class GlobalExceptionHandler(
     : IExceptionHandler
 {
     /// <summary>
-    /// Попытаться обработать исключение
+    ///     Попытаться обработать исключение
     /// </summary>
     public async ValueTask<bool> TryHandleAsync(
         HttpContext httpContext,
@@ -21,8 +21,8 @@ public sealed class GlobalExceptionHandler(
     {
         // понятным сообщением сделать логи 
         LogExceptionWithSimpleMessage(httpContext, exception);
-        
-        var problemDetails = CreateProblemDetails(exception);
+
+        ProblemDetails problemDetails = CreateProblemDetails(exception);
 
         return await problemDetailsService.TryWriteAsync(new ProblemDetailsContext
         {
@@ -43,11 +43,11 @@ public sealed class GlobalExceptionHandler(
     }
 
     /// <summary>
-    /// Логирование с короткими понятными сообщениями
+    ///     Логирование с короткими понятными сообщениями
     /// </summary>
     private void LogExceptionWithSimpleMessage(HttpContext httpContext, Exception exception)
     {
-        var requestPath = httpContext.Request.Path;
+        PathString requestPath = httpContext.Request.Path;
         var method = httpContext.Request.Method;
         var exceptionType = exception.GetType().Name;
 
@@ -86,12 +86,12 @@ public sealed class GlobalExceptionHandler(
     }
 
     /// <summary>
-    /// Создание ProblemDetails
+    ///     Создание ProblemDetails
     /// </summary>
     private static ProblemDetails CreateProblemDetails(Exception exception)
     {
         var statusCode = GetStatusCode(exception);
-        
+
         return new ProblemDetails
         {
             Title = GetTitle(exception),
@@ -101,31 +101,37 @@ public sealed class GlobalExceptionHandler(
     }
 
     /// <summary>
-    /// Получение статус кода
+    ///     Получение статус кода
     /// </summary>
-    private static int GetStatusCode(Exception exception) => exception switch
+    private static int GetStatusCode(Exception exception)
     {
-        KeyNotFoundException => StatusCodes.Status404NotFound,
-        ArgumentException => StatusCodes.Status400BadRequest,
-        InvalidOperationException => StatusCodes.Status400BadRequest,
-        UnauthorizedAccessException => StatusCodes.Status401Unauthorized,
-        _ => StatusCodes.Status500InternalServerError
-    };
+        return exception switch
+        {
+            KeyNotFoundException => StatusCodes.Status404NotFound,
+            ArgumentException => StatusCodes.Status400BadRequest,
+            InvalidOperationException => StatusCodes.Status400BadRequest,
+            UnauthorizedAccessException => StatusCodes.Status401Unauthorized,
+            _ => StatusCodes.Status500InternalServerError
+        };
+    }
 
     /// <summary>
-    /// Получение заголовка
+    ///     Получение заголовка
     /// </summary>
-    private static string GetTitle(Exception exception) => exception switch
+    private static string GetTitle(Exception exception)
     {
-        KeyNotFoundException => "Resource not found",
-        ArgumentException => "Bad request",
-        InvalidOperationException => "Invalid operation",
-        UnauthorizedAccessException => "Unauthorized",
-        _ => "Internal server error"
-    };
+        return exception switch
+        {
+            KeyNotFoundException => "Resource not found",
+            ArgumentException => "Bad request",
+            InvalidOperationException => "Invalid operation",
+            UnauthorizedAccessException => "Unauthorized",
+            _ => "Internal server error"
+        };
+    }
 
     /// <summary>
-    /// Получение деталей
+    ///     Получение деталей
     /// </summary>
     private static string GetDetail(Exception exception)
     {
@@ -134,7 +140,7 @@ public sealed class GlobalExceptionHandler(
         {
             return exception.Message;
         }
-        
+
         // Для серверных ошибок - общее сообщение
         return "An error occurred while processing your request. Please try again later.";
     }

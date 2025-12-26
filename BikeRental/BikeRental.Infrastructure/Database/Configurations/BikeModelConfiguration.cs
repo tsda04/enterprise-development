@@ -5,12 +5,12 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 namespace BikeRental.Infrastructure.Database.Configurations;
 
 /// <summary>
-/// Конфигурация сущности "BikeModel"
+///     Конфигурация сущности "BikeModel"
 /// </summary>
 public class BikeModelConfiguration : IEntityTypeConfiguration<BikeModel>
 {
     /// <summary>
-    /// Настройка сущности "BikeModel"
+    ///     Настройка сущности "BikeModel"
     /// </summary>
     /// <param name="builder"></param>
     public void Configure(EntityTypeBuilder<BikeModel> builder)

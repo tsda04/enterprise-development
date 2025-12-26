@@ -1,6 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-    <Sdk Name="Aspire.AppHost.Sdk" Version="13.0.2" />
+    <Sdk Name="Aspire.AppHost.Sdk" Version="13.0.2"/>
 
     <PropertyGroup>
         <OutputType>Exe</OutputType>
@@ -11,9 +11,9 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Aspire.Hosting.AppHost" Version="13.0.2" />
-        <PackageReference Include="Aspire.Hosting.MySql" Version="13.0.2" />
-        <PackageReference Include="CommunityToolkit.Aspire.Hosting.MySql.Extensions" Version="13.0.1-beta.468" />
+        <PackageReference Include="Aspire.Hosting.AppHost" Version="13.0.2"/>
+        <PackageReference Include="Aspire.Hosting.MySql" Version="13.0.2"/>
+        <PackageReference Include="CommunityToolkit.Aspire.Hosting.MySql.Extensions" Version="13.0.1-beta.468"/>
     </ItemGroup>
 
     <ItemGroup>
@@ -23,8 +23,8 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\BikeRental.Api\BikeRental.Api.csproj" />
-        <ProjectReference Include="..\BikeRental.Generator.Nats.Host\BikeRental.Generator.Nats.Host.csproj" />
+        <ProjectReference Include="..\BikeRental.Api\BikeRental.Api.csproj"/>
+        <ProjectReference Include="..\BikeRental.Generator.Nats.Host\BikeRental.Generator.Nats.Host.csproj"/>
     </ItemGroup>
 
 </Project>

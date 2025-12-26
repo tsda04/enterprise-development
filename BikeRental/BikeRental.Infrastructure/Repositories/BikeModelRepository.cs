@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 namespace BikeRental.Infrastructure.Repositories;
 
 /// <summary>
-/// Репозиторий для работы с моделями велосипедов.
+///     Репозиторий для работы с моделями велосипедов.
 /// </summary>
 public sealed class BikeModelRepository(ApplicationDbContext dbContext) : IBikeModelRepository
 {

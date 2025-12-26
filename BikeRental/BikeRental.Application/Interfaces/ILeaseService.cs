@@ -3,7 +3,7 @@ using BikeRental.Application.Contracts.Dtos;
 namespace BikeRental.Application.Interfaces;
 
 /// <summary>
-/// Service for managing bike leases.
+///     Service for managing bike leases.
 /// </summary>
 public interface ILeaseService
 {

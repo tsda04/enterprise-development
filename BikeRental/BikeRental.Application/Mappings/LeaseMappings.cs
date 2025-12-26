@@ -16,13 +16,13 @@ internal static class LeaseMappings
             RentalDuration = entity.RentalDuration
         };
     }
-    
+
     public static Lease ToEntity(this LeaseCreateUpdateDto dto, Bike bike, Renter renter)
     {
         return new Lease
         {
-            BikeId =  bike.Id,
-            RenterId =  renter.Id,
+            BikeId = bike.Id,
+            RenterId = renter.Id,
             Bike = bike,
             Renter = renter,
             RentalStartTime = dto.RentalStartTime,

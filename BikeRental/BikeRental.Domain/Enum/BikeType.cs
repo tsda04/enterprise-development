@@ -1,27 +1,27 @@
 namespace BikeRental.Domain.Enum;
 
 /// <summary>
-/// A class describing the types of bikes that can be rented
+///     A class describing the types of bikes that can be rented
 /// </summary>
 public enum BikeType
 {
     /// <summary>
-    /// Road bike
+    ///     Road bike
     /// </summary>
     Road,
-    
+
     /// <summary>
-    /// Sports bike
+    ///     Sports bike
     /// </summary>
     Sport,
 
     /// <summary>
-    /// Mountain bike
+    ///     Mountain bike
     /// </summary>
     Mountain,
-    
+
     /// <summary>
-    /// Hybrid bike - a bicycle that combines the qualities of a mountain bike and a road bike
+    ///     Hybrid bike - a bicycle that combines the qualities of a mountain bike and a road bike
     /// </summary>
     Hybrid
 }
